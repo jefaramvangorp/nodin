@@ -79,13 +79,18 @@ void MainWindow::addNodeClicked()
         items.append(QString::fromStdString(node_types[i]));
     }
 
-    std::string title = QInputDialog::getItem(this, tr("Add node"), tr("Choose node type"), items).toStdString();
+    bool ok_was_clicked = false;
+    std::string title = QInputDialog::getItem(this, tr("Add node"), tr("Choose node type"), items, 0, true, &ok_was_clicked).toStdString();
 
-    const Node& node = app_->createNode(title);
-    NodeItem* node_item = new NodeItem(node);
-    node_item->addDelegate(this);
-    this->scene_->addItem(node_item);
-    this->node_items.insert(node.id(), node_item);
+
+    if (ok_was_clicked)
+    {
+        const Node& node = app_->createNode(title);
+        NodeItem* node_item = new NodeItem(node);
+        node_item->addDelegate(this);
+        this->scene_->addItem(node_item);
+        this->node_items.insert(node.id(), node_item);
+    }
 }
 
 void MainWindow::connectClicked()
