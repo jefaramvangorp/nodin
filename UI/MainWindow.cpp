@@ -25,10 +25,13 @@ MainWindow::MainWindow(App *app, QWidget *parent)
     connect(add_node_button, &QPushButton::clicked, this, &MainWindow::addNodeClicked);
     QPushButton* connect_button = new QPushButton(tr("Connect"));
     connect(connect_button, &QPushButton::clicked, this, &MainWindow::connectClicked);
+    QPushButton* execute_button = new QPushButton(tr("Execute"));
+    connect(execute_button, &QPushButton::clicked, this, &MainWindow::executeClicked);
 
     QHBoxLayout* toolbar_layout = new QHBoxLayout;
     toolbar_layout->addWidget(add_node_button);
     toolbar_layout->addWidget(connect_button);
+    toolbar_layout->addWidget(execute_button);
     toolbar_layout->addStretch();
 
     QVBoxLayout* main_layout = new QVBoxLayout;
@@ -54,20 +57,25 @@ MainWindow::~MainWindow()
 
 void MainWindow::nodeInputSelected(const std::string &nodeID, int index)
 {
-    this->selected_input_node = nodeID;
-    this->selected_input_index = index;
+    this->selected_input_node_id_ = nodeID;
+    this->selected_input_index_ = index;
 }
 
 void MainWindow::nodeOutputSelected(const std::string &nodeID, int index)
 {
-    this->selected_output_node = nodeID;
-    this->selected_output_index = index;
+    this->selected_output_node_id_ = nodeID;
+    this->selected_output_index_ = index;
 }
 
 std::string MainWindow::promptString(const std::string &message)
 {
     std::string text = QInputDialog::getText(this, tr("Enter Input:"), QString::fromStdString(message)).toStdString();
     return text;
+}
+
+void MainWindow::displayError(const std::string &message)
+{
+    QMessageBox::critical(this, "Error!", QString::fromStdString(message));
 }
 
 void MainWindow::addNodeClicked()
@@ -85,34 +93,42 @@ void MainWindow::addNodeClicked()
 
     if (ok_was_clicked)
     {
-        const Node& node = app_->createNode(title);
+        const Node* node = app_->createNode(title);
         NodeItem* node_item = new NodeItem(node);
         node_item->addDelegate(this);
         this->scene_->addItem(node_item);
-        this->node_items.insert(node.id(), node_item);
+        this->node_items.insert(node->id(), node_item);
     }
 }
 
 void MainWindow::connectClicked()
 {
-    if (this->selected_input_node.empty() || this->selected_output_node.empty())
+    if (selected_input_node_id_.empty() || selected_output_node_id_.empty())
     {
         return;
     }
     else
     {
-        Connection connection = this->app_->connectNodes(this->selected_output_node,
-                                                         this->selected_output_index,
-                                                         this->selected_input_node,
-                                                         this->selected_input_index);
+        bool ok = app_->connectNodes(selected_output_node_id_,
+                                     selected_output_index_,
+                                     selected_input_node_id_,
+                                     selected_input_index_);
 
-        NodeItem* output_node_item = this->node_items.value(connection.output_node_id_);
-        NodeItem* input_node_item = this->node_items.value(connection.input_node_id_);
+        if (ok)
+        {
+            NodeItem* output_node_item = this->node_items.value(selected_output_node_id_);
+            NodeItem* input_node_item = this->node_items.value(selected_input_node_id_);
 
-        ConnectionItem* item = new ConnectionItem(output_node_item, connection.output_index_,
-                                                  input_node_item, connection.input_index_);
+            ConnectionItem* item = new ConnectionItem(output_node_item, selected_output_index_,
+                                                      input_node_item, selected_input_index_);
 
-        this->scene_->addItem(item);
+            this->scene_->addItem(item);
+        }
     }
 
+}
+
+void MainWindow::executeClicked()
+{
+    app_->executeTerminalNodes();
 }

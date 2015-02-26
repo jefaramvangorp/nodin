@@ -28,11 +28,13 @@ public:
 
     // App::UI interface.
     virtual std::string promptString(const std::string& message);
+    virtual void displayError(const std::string& message);
 
 private slots:
 
     void addNodeClicked();
     void connectClicked();
+    void executeClicked();
 
 private:
 
@@ -43,10 +45,10 @@ private:
     QMap<std::string, NodeItem*> node_items;
 
 
-    std::string selected_output_node;
-    int selected_output_index;
-    std::string selected_input_node;
-    int selected_input_index;
+    std::string selected_output_node_id_;
+    int selected_output_index_;
+    std::string selected_input_node_id_;
+    int selected_input_index_;
 };
 
 #endif // MAINWINDOW_H
