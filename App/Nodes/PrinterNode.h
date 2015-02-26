@@ -1,10 +1,17 @@
-#ifndef PRINTERNODE_H
-#define PRINTERNODE_H
+#ifndef APP_NODES_PRINTERNODE_H_
+#define APP_NODES_PRINTERNODE_H_
 
-class PrinterNode
+// Includes.
+#include "App/Nodes/Node.h"
+
+class PrinterNode : public Node
 {
 public:
-    PrinterNode();
+    PrinterNode(const std::string& id);
+
+private:
+
+    virtual bool computeValueAtOutput(const std::vector<std::string>& inputs, int outputIndex, std::string *output);
 };
 
-#endif // PRINTERNODE_H
+#endif // APP_NODES_PRINTERNODE_H_

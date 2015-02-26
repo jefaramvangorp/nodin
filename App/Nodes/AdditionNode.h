@@ -1,10 +1,18 @@
-#ifndef ADDITIONNODE_H
-#define ADDITIONNODE_H
+#ifndef APP_NODES_ADDITIONNODE_H_
+#define APP_NODES_ADDITIONNODE_H_
 
-class AdditionNode
+// Includes.
+#include "Node.h"
+
+class AdditionNode : public Node
 {
 public:
-    AdditionNode();
+    AdditionNode(const std::string &id);
+
+private:
+
+    virtual bool computeValueAtOutput(const std::vector<std::string>& inputs, int outputIndex, std::string *output);
+
 };
 
-#endif // ADDITIONNODE_H
+#endif // APP_NODES_ADDITIONNODE_H_

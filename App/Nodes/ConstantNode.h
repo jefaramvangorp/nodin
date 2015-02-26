@@ -1,10 +1,22 @@
-#ifndef CONSTANTNODE_H
-#define CONSTANTNODE_H
+#ifndef APP_NODES_CONSTANTNODE_H_
+#define APP_NODES_CONSTANTNODE_H_
 
-class ConstantNode
+// Includes.
+#include "App/Nodes/Node.h"
+
+// STD.
+#include <string>
+
+class ConstantNode : public Node
 {
 public:
-    ConstantNode();
+    ConstantNode(const std::string &id, const std::string& value);
+
+private:
+
+    virtual bool computeValueAtOutput(const std::vector<std::string>& inputs, int outputIndex, std::string *output);
+
+    std::string value_;
 };
 
-#endif // CONSTANTNODE_H
+#endif // APP_NODES_CONSTANTNODE_H_
