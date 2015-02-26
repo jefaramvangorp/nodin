@@ -9,6 +9,9 @@
 #include <vector>
 #include <string>
 
+// Forward declarations.
+class NodeProxy;
+
 class App
 {
 public:
@@ -27,7 +30,7 @@ public:
     void setUI(UI* ui) { ui_ = ui; }
 
     std::vector<std::string> availableNodeTypes() const;
-    const Node *createNode(const std::string& type);
+    const NodeProxy* createNode(const std::string& type);
     bool connectNodes(const std::string& outputNodeID, int outputIndex,
                                    const std::string& inputNodeID, int inputIndex);
     void executeTerminalNodes() const;

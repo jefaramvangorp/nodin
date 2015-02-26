@@ -1,6 +1,9 @@
 #ifndef APP_BOUNDARY_NODEPROXY_H_
 #define APP_BOUNDARY_NODEPROXY_H_
 
+// STD.
+#include <string>
+
 // Forward declarations.
 class Node;
 

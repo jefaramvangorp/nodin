@@ -1,9 +1,6 @@
 #ifndef NODE_H
 #define NODE_H
 
-// Includes.
-#include "App/Nodes/Node.h"
-
 // Qt.
 #include <QGraphicsItem>
 #include <QPainterPath>
@@ -12,6 +9,8 @@
 #include <string>
 #include <vector>
 
+// Forward declarations.
+class NodeProxy;
 
 class NodeItem : public QGraphicsItem
 {
@@ -26,7 +25,7 @@ public:
         virtual void nodeMoved(NodeItem* item) {}
     };
 
-    NodeItem(const Node* node_);
+    NodeItem(const NodeProxy* node_);
     virtual ~NodeItem();
 
     virtual QRectF boundingRect() const;
@@ -56,7 +55,7 @@ private:
     QRectF nodeBoxRect() const;
     QRectF textRect() const;
 
-    const Node* node_;
+    const NodeProxy* node_;
     std::vector<Delegate*> delegates_;
     int selected_input_index_;
     int selected_output_index_;

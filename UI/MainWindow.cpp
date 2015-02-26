@@ -4,6 +4,7 @@
 #include "UI/NodeItem.h"
 #include "UI/ConnectionItem.h"
 #include "App/App.h"
+#include "App/Boundary/NodeProxy.h"
 
 // Qt.
 #include <QGraphicsView>
@@ -93,7 +94,7 @@ void MainWindow::addNodeClicked()
 
     if (ok_was_clicked)
     {
-        const Node* node = app_->createNode(title);
+        const NodeProxy* node = app_->createNode(title);
         NodeItem* node_item = new NodeItem(node);
         node_item->addDelegate(this);
         this->scene_->addItem(node_item);

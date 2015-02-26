@@ -1,6 +1,7 @@
 
 // Includes.
 #include "UI/NodeItem.h"
+#include "App/Boundary/NodeProxy.h"
 
 // Qt.
 #include <QPen>
@@ -18,7 +19,7 @@ namespace
     const int INNER_MARGIN = 10; // Margin between node box and text rect.
 }
 
-NodeItem::NodeItem(const Node *node)
+NodeItem::NodeItem(const NodeProxy *node)
     : node_(node)
     , selected_input_index_(-1)
     , selected_output_index_(-1)
@@ -30,7 +31,7 @@ NodeItem::NodeItem(const Node *node)
 
 NodeItem::~NodeItem()
 {
-
+    delete node_;
 }
 
 QRectF NodeItem::boundingRect() const

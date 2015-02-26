@@ -4,6 +4,7 @@
 #include "App/Nodes/AdditionNode.h"
 #include "App/Nodes/ConstantNode.h"
 #include "App/Nodes/PrinterNode.h"
+#include "App/Boundary/NodeProxy.h"
 
 // Qt. (TODO REMOVE THIS DEPENDENCY ON QT).
 #include <QUuid>
@@ -34,7 +35,7 @@ std::vector<std::string> App::availableNodeTypes() const
     return types;
 }
 
-const Node* App::createNode(const std::string &type)
+const NodeProxy* App::createNode(const std::string &type)
 {
     std::string id = QUuid::createUuid().toString().toStdString();
 
@@ -67,7 +68,7 @@ const Node* App::createNode(const std::string &type)
             terminal_nodes_.push_back(node);
         }
 
-        return this->nodes_[id];
+        return new NodeProxy(node);
     }
     else
     {
