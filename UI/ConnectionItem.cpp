@@ -7,8 +7,8 @@
 
 ConnectionItem::ConnectionItem(NodeItem *outputItem, int outputIndex, NodeItem *inputItem, int inputIndex)
     : output_item_(outputItem)
-    , output_index_(outputIndex)
     , input_item_(inputItem)
+    , output_index_(outputIndex)
     , input_index_(inputIndex)
 {
     this->output_item_->addDelegate(this);
