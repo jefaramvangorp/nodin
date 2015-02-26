@@ -16,13 +16,19 @@ INCLUDEPATH += .
 SOURCES += main.cpp\
     UI/NodeItem.cpp \
     UI/MainWindow.cpp \
-    App/Node.cpp \
     App/App.cpp \
-    UI/ConnectionItem.cpp
+    UI/ConnectionItem.cpp \
+    App/Nodes/Node.cpp \
+    App/Nodes/AdditionNode.cpp \
+    App/Nodes/ConstantNode.cpp \
+    App/Nodes/PrinterNode.cpp
 
 HEADERS  += \
     UI/NodeItem.h \
     UI/MainWindow.h \
-    App/Node.h \
     App/App.h \
-    UI/ConnectionItem.h
+    UI/ConnectionItem.h \
+    App/Nodes/Node.h \
+    App/Nodes/AdditionNode.h \
+    App/Nodes/ConstantNode.h \
+    App/Nodes/PrinterNode.h
