@@ -1,10 +1,21 @@
-#ifndef NODEPROXY_H
-#define NODEPROXY_H
+#ifndef APP_BOUNDARY_NODEPROXY_H_
+#define APP_BOUNDARY_NODEPROXY_H_
+
+// Forward declarations.
+class Node;
 
 class NodeProxy
 {
 public:
-    NodeProxy();
+    NodeProxy(const Node* node);
+
+    const std::string& id() const;
+    const std::string& name() const;
+    int numInputs() const;
+    int numOutputs() const;
+
+private:
+    const Node* node_;
 };
 
-#endif // NODEPROXY_H
+#endif // APP_BOUNDARY_NODEPROXY_H_

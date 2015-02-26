@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     App/Nodes/Node.cpp \
     App/Nodes/AdditionNode.cpp \
     App/Nodes/ConstantNode.cpp \
-    App/Nodes/PrinterNode.cpp
+    App/Nodes/PrinterNode.cpp \
+    App/Boundary/NodeProxy.cpp
 
 HEADERS  += \
     UI/NodeItem.h \
@@ -31,4 +32,5 @@ HEADERS  += \
     App/Nodes/Node.h \
     App/Nodes/AdditionNode.h \
     App/Nodes/ConstantNode.h \
-    App/Nodes/PrinterNode.h
+    App/Nodes/PrinterNode.h \
+    App/Boundary/NodeProxy.h
