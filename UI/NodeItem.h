@@ -32,7 +32,6 @@ public:
     virtual QRectF boundingRect() const;
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    const Node* node() const { return node_; }
     void addDelegate(Delegate* delegate);
     void removeDelegate(Delegate* delegate);
     QPointF inputPos(int index) const;
