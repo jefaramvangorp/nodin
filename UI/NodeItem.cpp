@@ -18,7 +18,7 @@ namespace
     const int INNER_MARGIN = 10; // Margin between node box and text rect.
 }
 
-NodeItem::NodeItem(const Node &node)
+NodeItem::NodeItem(const Node *node)
     : node_(node)
     , selected_input_index_(-1)
     , selected_output_index_(-1)
@@ -35,11 +35,11 @@ NodeItem::~NodeItem()
 
 QRectF NodeItem::boundingRect() const
 {
-    int max_connections = qMax(node_.numInputs(), node_.numOutputs());
+    int max_connections = qMax(node_->numInputs(), node_->numOutputs());
     qreal height = max_connections * OUTER_MARGIN + (max_connections-1) * OUTER_MARGIN + 4 * OUTER_MARGIN;
 
     QFontMetrics metrics(font());
-    qreal width = metrics.width(QString::fromStdString(node_.name())) + 2 * INNER_MARGIN + 4 * OUTER_MARGIN;
+    qreal width = metrics.width(QString::fromStdString(node_->name())) + 2 * INNER_MARGIN + 4 * OUTER_MARGIN;
 
     return QRectF(-width / 2, -height / 2, width, height);
 }
@@ -87,12 +87,12 @@ void NodeItem::drawNodeBox(QPainter *painter) const
 void NodeItem::drawText(QPainter *painter) const
 {
     painter->setFont(font());
-    painter->drawText(textRect(), Qt::AlignCenter, QString::fromStdString(node_.name()));
+    painter->drawText(textRect(), Qt::AlignCenter, QString::fromStdString(node_->name()));
 }
 
 void NodeItem::drawInputs(QPainter *painter) const
 {
-    for (int i = 0; i < node_.numInputs(); ++i)
+    for (int i = 0; i < node_->numInputs(); ++i)
     {
         QPainterPath path = pathForInput(i);
         painter->fillPath(path, QBrush(this->selected_input_index_ == i ? Qt::yellow : Qt::red));
@@ -102,7 +102,7 @@ void NodeItem::drawInputs(QPainter *painter) const
 
 void NodeItem::drawOutputs(QPainter *painter) const
 {
-    for (int i = 0; i < node_.numOutputs(); ++i)
+    for (int i = 0; i < node_->numOutputs(); ++i)
     {
         QPainterPath path = pathForOutput(i);
         painter->fillPath(path, QBrush(this->selected_output_index_ == i ? Qt::cyan : Qt::blue));
@@ -112,7 +112,7 @@ void NodeItem::drawOutputs(QPainter *painter) const
 
 QPainterPath NodeItem::pathForInput(int index) const
 {
-    qreal start_y = -(node_.numInputs() * OUTER_MARGIN + (node_.numInputs()-1) * OUTER_MARGIN) / 2;
+    qreal start_y = -(node_->numInputs() * OUTER_MARGIN + (node_->numInputs()-1) * OUTER_MARGIN) / 2;
     qreal x = boundingRect().left();
     qreal y = start_y + index * 2 * OUTER_MARGIN;
 
@@ -124,7 +124,7 @@ QPainterPath NodeItem::pathForInput(int index) const
 
 QPainterPath NodeItem::pathForOutput(int index) const
 {
-    qreal start_y = -(node_.numOutputs() * OUTER_MARGIN + (node_.numOutputs()-1) * OUTER_MARGIN) / 2;
+    qreal start_y = -(node_->numOutputs() * OUTER_MARGIN + (node_->numOutputs()-1) * OUTER_MARGIN) / 2;
     qreal x = boundingRect().right() - OUTER_MARGIN / 2;
     qreal radius = OUTER_MARGIN / 2;
     qreal y = start_y + (index * 2 * OUTER_MARGIN) + (OUTER_MARGIN / 2);
@@ -161,14 +161,14 @@ void NodeItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mousePressEvent(event);
 
-    for (int i = 0; i < node_.numInputs(); ++i)
+    for (int i = 0; i < node_->numInputs(); ++i)
     {
         QPainterPath path = pathForInput(i);
         if (path.contains(event->pos()))
         {
-            for (int j = 0; j < this->delegates_.size(); ++j)
+            for (size_t j = 0; j < this->delegates_.size(); ++j)
             {
-                this->delegates_[j]->nodeInputSelected(node_.id(), i);
+                this->delegates_[j]->nodeInputSelected(node_->id(), i);
             }
 
             this->selected_input_index_ = i;
@@ -177,14 +177,14 @@ void NodeItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
         }
     }
 
-    for (int i = 0; i < node_.numOutputs(); ++i)
+    for (int i = 0; i < node_->numOutputs(); ++i)
     {
         QPainterPath path = pathForOutput(i);
         if (path.contains(event->pos()))
         {
-            for (int j = 0; j < this->delegates_.size(); ++j)
+            for (size_t j = 0; j < this->delegates_.size(); ++j)
             {
-                this->delegates_[j]->nodeOutputSelected(node_.id(), i);
+                this->delegates_[j]->nodeOutputSelected(node_->id(), i);
             }
 
             this->selected_output_index_ = i;
@@ -198,7 +198,7 @@ void NodeItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mouseMoveEvent(event);
 
-    for (int j = 0; j < this->delegates_.size(); ++j)
+    for (size_t j = 0; j < this->delegates_.size(); ++j)
     {
         this->delegates_[j]->nodeMoved(this);
     }

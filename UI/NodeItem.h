@@ -2,7 +2,7 @@
 #define NODE_H
 
 // Includes.
-#include "App/Node.h"
+#include "App/Nodes/Node.h"
 
 // Qt.
 #include <QGraphicsItem>
@@ -26,13 +26,13 @@ public:
         virtual void nodeMoved(NodeItem* item) {}
     };
 
-    NodeItem(const Node& node_);
+    NodeItem(const Node* node_);
     virtual ~NodeItem();
 
     virtual QRectF boundingRect() const;
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    const Node& node() const { return node_; }
+    const Node* node() const { return node_; }
     void addDelegate(Delegate* delegate);
     void removeDelegate(Delegate* delegate);
     QPointF inputPos(int index) const;
@@ -57,7 +57,7 @@ private:
     QRectF nodeBoxRect() const;
     QRectF textRect() const;
 
-    Node node_;
+    const Node* node_;
     std::vector<Delegate*> delegates_;
     int selected_input_index_;
     int selected_output_index_;
