@@ -5,8 +5,16 @@
 #include <string>
 #include <vector>
 
-// Forward declarations.
-struct Connector;
+// Forward declarations
+class Node;
+
+struct Connector
+{
+    Node* node_;
+    int index_;
+
+    Connector(Node* node, int index) : node_(node), index_(index) {}
+};
 
 class Node
 {
@@ -15,14 +23,19 @@ public:
 
     const std::string& id() const { return id_; }
     const std::string& name() const { return name_; }
-
     int numInputs() const { return num_inputs_; }
     int numOutputs() const { return num_outputs_; }
     const std::string& errorMessage() const { return error_message_; }
     bool isTerminal() const { return num_outputs_ == 0; }
+    bool isInputConnected(int index) const { return inputConnector(index) != 0; }
+    bool isOutputConnected(int index) const { return outputConnector(index) != 0; }
+    Connector* inputConnector(int index) const;
+    Connector* outputConnector(int index) const;
 
-    bool connectOutputTo(int outputIndex, Node* node, int inputIndex);
-    bool connectInputTo(int inputIndex, Node* node, int outputIndex);
+    bool disconnectInput(int index);
+    bool disconnectOutput(int index);
+    bool connectInputTo(int index, Node* outputNode, int outputIndex);
+    bool connectOutputTo(int index, Node* inputNode, int inputIndex);
     bool valueAtOutput(int index, std::string *output);
     bool executeAsTerminal();
 

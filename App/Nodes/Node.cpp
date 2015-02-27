@@ -6,15 +6,6 @@
 #include <sstream>
 
 
-struct Connector
-{
-    Node* node_;
-    int index_;
-
-    Connector(Node* node, int index) : node_(node), index_(index) {}
-};
-
-
 Node::Node(const std::string& id, const std::string &name, int numInputs, int numOutputs)
     : id_(id)
     , name_(name)
@@ -43,6 +34,30 @@ Node::~Node()
     delete [] outputs_;
 }
 
+Connector *Node::inputConnector(int index) const
+{
+    if (index >= 0 && index < num_inputs_)
+    {
+        return inputs_[index];
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+Connector *Node::outputConnector(int index) const
+{
+    if (index >= 0 && index < num_outputs_)
+    {
+        return outputs_[index];
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 void Node::setErrorMessage(const std::string &errorMessage)
 {
     std::ostringstream stream;
@@ -50,11 +65,27 @@ void Node::setErrorMessage(const std::string &errorMessage)
     error_message_ = stream.str();
 }
 
-bool Node::connectOutputTo(int outputIndex, Node *node, int inputIndex)
+bool Node::disconnectInput(int index)
 {
-    if (outputIndex >= 0 && outputIndex < num_outputs_)
+    if (index >= 0 && index < num_inputs_)
     {
-        outputs_[outputIndex] = new Connector(node, inputIndex);
+        delete inputs_[index];
+        inputs_[index] = 0;
+        return true;
+    }
+    else
+    {
+        setErrorMessage("Input index out of bounds.");
+        return false;
+    }
+}
+
+bool Node::disconnectOutput(int index)
+{
+    if (index >= 0 && index < num_outputs_)
+    {
+        delete outputs_[index];
+        outputs_[index] = 0;
         return true;
     }
     else
@@ -64,16 +95,46 @@ bool Node::connectOutputTo(int outputIndex, Node *node, int inputIndex)
     }
 }
 
-bool Node::connectInputTo(int inputIndex, Node *node, int outputIndex)
+bool Node::connectInputTo(int index, Node *outputNode, int outputIndex)
 {
-    if (inputIndex >= 0 && inputIndex < num_inputs_)
+    if (index >= 0 && index < num_inputs_)
     {
-        inputs_[inputIndex] = new Connector(node, outputIndex);
-        return true;
+        if (inputs_[index] != 0)
+        {
+            setErrorMessage("Input[i] is already connected to a node.");
+            return false;
+        }
+        else
+        {
+            inputs_[index] = new Connector(outputNode, outputIndex);
+            return true;
+        }
     }
     else
     {
         setErrorMessage("Input index out of bounds.");
+        return false;
+    }
+}
+
+bool Node::connectOutputTo(int index, Node *inputNode, int inputIndex)
+{
+    if (index >= 0 && index < num_outputs_)
+    {
+        if (outputs_[index] != 0)
+        {
+            setErrorMessage("Output[i] is already connected to a node.");
+            return false;
+        }
+        else
+        {
+            outputs_[index] = new Connector(inputNode, inputIndex);
+            return true;
+        }
+    }
+    else
+    {
+        setErrorMessage("Output index out of bounds.");
         return false;
     }
 }
