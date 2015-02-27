@@ -33,4 +33,5 @@ HEADERS  += \
     App/Nodes/AdditionNode.h \
     App/Nodes/ConstantNode.h \
     App/Nodes/PrinterNode.h \
-    App/Boundary/NodeProxy.h
+    App/Boundary/NodeProxy.h \
+    App/Boundary/ConnectionProxy.h
