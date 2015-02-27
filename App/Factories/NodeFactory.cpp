@@ -13,7 +13,7 @@ NodeFactory::NodeFactory(NodeFactoryDelegate *delegate)
 
 NodeFactory::~NodeFactory()
 {
-
+    delete delegate_;
 }
 
 std::string NodeFactory::nodeType() const
@@ -34,7 +34,7 @@ Node* NodeFactory::createNode(const std::string &id)
     }
     else
     {
-        return 0;
+        return nullptr;
     }
 }
 

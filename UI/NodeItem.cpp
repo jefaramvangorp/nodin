@@ -55,7 +55,7 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
 void NodeItem::addDelegate(NodeItem::Delegate *delegate)
 {
-    if (delegate != 0)
+    if (delegate != nullptr)
     {
         this->delegates_.push_back(delegate);
     }

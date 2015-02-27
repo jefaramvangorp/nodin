@@ -1,11 +1,14 @@
 
 // Includes.
 #include "App/App.h"
+#include "App/Nodes/Node.h"
 #include "App/Nodes/AdditionNode.h"
 #include "App/Nodes/ConstantNode.h"
 #include "App/Nodes/PrinterNode.h"
 #include "App/Boundary/NodeProxy.h"
 #include "App/Boundary/ConnectionProxy.h"
+#include "App/Factories/NodeFactory.h"
+#include "App/Factories/NodeFactoryDelegate.h"
 
 // Qt. (TODO REMOVE THIS DEPENDENCY ON QT).
 #include <QUuid>
@@ -16,58 +19,70 @@ App::App()
 
 App::~App()
 {
-    std::map<std::string, Node*>::iterator iter;
-    for (iter = nodes_.begin(); iter != nodes_.end(); ++iter)
+    std::map<std::string, Node*>::iterator nodes_iter;
+    for (nodes_iter = nodes_.begin(); nodes_iter != nodes_.end(); ++nodes_iter)
     {
-        delete (*iter).second;
+        delete (*nodes_iter).second;
     }
     nodes_.clear();
     terminal_nodes_.clear();
+
+    std::vector<NodeFactory*>::iterator factories_iter;
+    for (factories_iter = node_factories_.begin(); factories_iter != node_factories_.end(); ++factories_iter)
+    {
+        delete (*factories_iter);
+    }
+    node_factories_.clear();
 }
 
-std::vector<std::string> App::availableNodeTypes() const
+bool App::addNodeFactory(NodeFactoryDelegate *delegate)
 {
-    std::vector<std::string> types;
-
-    types.push_back("Add");
-    types.push_back("Constant");
-    types.push_back("Printer");
-
-    return types;
+    if (delegate != nullptr)
+    {
+        node_factories_.push_back(new NodeFactory(delegate));
+        available_node_types_.push_back(delegate->nodeType());
+    }
+    else
+    {
+        fprintf(stderr, "Node factory delegate must not be NULL!\n");
+        return false;
+    }
 }
 
 const NodeProxy* App::createNode(const std::string &type)
 {
     std::string id = QUuid::createUuid().toString().toStdString();
 
-    Node* node = 0;
+    Node* node = nullptr;
 
-    if (type == "Add")
+    std::vector<NodeFactory*>::iterator iter;
+    for (iter = node_factories_.begin(); iter != node_factories_.end(); ++iter)
     {
-        node = new AdditionNode(id);
+        NodeFactory* factory = (*iter);
+
+        if (factory->nodeType() == type)
+        {
+            const std::vector<std::string>& required_params = factory->requiredParameters();
+            for (int i = 0; i < required_params.size(); ++i)
+            {
+                std::string param = required_params[i];
+                std::string value = ui_->promptString(param);
+                factory->setParameterValue(param, value);
+            }
+
+            node = factory->createNode(id);
+        }
     }
-    else if (type == "Constant")
-    {
-        std::string value = ui_->promptString("Enter constant value:");
-        node = new ConstantNode(id, value);
-    }
-    else if (type == "Printer")
-    {
-        node = new PrinterNode(id);
-    }
-    else
+
+    if (node == nullptr)
     {
         ui_->displayError("Unsupported node type.");
+        return nullptr;
     }
-
-    if (node != 0)
+    else
     {
         addNode(node);
         return new NodeProxy(node);
-    }
-    else
-    {
-        return 0;
     }
 }
 

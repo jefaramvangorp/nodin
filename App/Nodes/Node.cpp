@@ -70,7 +70,7 @@ bool Node::disconnectInput(int index)
     if (index >= 0 && index < num_inputs_)
     {
         delete inputs_[index];
-        inputs_[index] = 0;
+        inputs_[index] = nullptr;
         return true;
     }
     else
@@ -85,7 +85,7 @@ bool Node::disconnectOutput(int index)
     if (index >= 0 && index < num_outputs_)
     {
         delete outputs_[index];
-        outputs_[index] = 0;
+        outputs_[index] = nullptr;
         return true;
     }
     else
@@ -99,7 +99,7 @@ bool Node::connectInputTo(int index, Node *outputNode, int outputIndex)
 {
     if (index >= 0 && index < num_inputs_)
     {
-        if (inputs_[index] != 0)
+        if (inputs_[index] != nullptr)
         {
             setErrorMessage("Input[i] is already connected to a node.");
             return false;
@@ -121,7 +121,7 @@ bool Node::connectOutputTo(int index, Node *inputNode, int inputIndex)
 {
     if (index >= 0 && index < num_outputs_)
     {
-        if (outputs_[index] != 0)
+        if (outputs_[index] != nullptr)
         {
             setErrorMessage("Output[i] is already connected to a node.");
             return false;
@@ -166,7 +166,7 @@ bool Node::retrieveInputs(std::vector<std::string> *inputs)
 {
     for (int i = 0; i < num_inputs_; ++i)
     {
-        if (inputs_[i] == 0)
+        if (inputs_[i] == nullptr)
         {
             setErrorMessage("Not all inputs are connected.");
             return false;
