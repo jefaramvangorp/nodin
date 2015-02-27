@@ -17,18 +17,20 @@ public:
     {
     public:
         virtual ~Delegate() {}
+        virtual std::string nodeType() const = 0;
         virtual std::vector<std::string> requiredParameters() = 0;
         virtual bool isValidParameter(const std::string& parameter, const std::string& value) const = 0;
-        virtual Node* createNode(const std::map<std::string, std::string>& parameters) = 0;
+        virtual Node* createNode(const std::string& id, const std::map<std::string, std::string>& parameters) = 0;
     };
 
     NodeFactory(Delegate* delegate);
     ~NodeFactory();
 
+    std::string nodeType() const;
     const std::vector<std::string>& requiredParameters() const { return required_parameters_; }
     void setParameterValue(const std::string& parameter, const std::string& value);
 
-    Node* createNode();
+    Node* createNode(const std::string& id);
 
 private:
 

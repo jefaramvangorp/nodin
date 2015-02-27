@@ -15,16 +15,21 @@ NodeFactory::~NodeFactory()
 
 }
 
+std::string NodeFactory::nodeType() const
+{
+    return delegate_->nodeType();
+}
+
 void NodeFactory::setParameterValue(const std::string &parameter, const std::string &value)
 {
     parameters_[parameter] = value;
 }
 
-Node* NodeFactory::createNode()
+Node* NodeFactory::createNode(const std::string &id)
 {
     if (allParametersAreValid())
     {
-        return delegate_->createNode(parameters_);
+        return delegate_->createNode(id, parameters_);
     }
     else
     {
