@@ -5,6 +5,7 @@
 #include "UI/ConnectionItem.h"
 #include "App/App.h"
 #include "App/Boundary/NodeProxy.h"
+#include "App/Boundary/ConnectionProxy.h"
 
 // Qt.
 #include <QGraphicsView>
@@ -28,11 +29,14 @@ MainWindow::MainWindow(App *app, QWidget *parent)
     connect(connect_button, &QPushButton::clicked, this, &MainWindow::connectClicked);
     QPushButton* execute_button = new QPushButton(tr("Execute"));
     connect(execute_button, &QPushButton::clicked, this, &MainWindow::executeClicked);
+    QPushButton* test_button = new QPushButton(tr("Test"));
+    connect(test_button, &QPushButton::clicked, this, &MainWindow::testClicked);
 
     QHBoxLayout* toolbar_layout = new QHBoxLayout;
     toolbar_layout->addWidget(add_node_button);
     toolbar_layout->addWidget(connect_button);
     toolbar_layout->addWidget(execute_button);
+    toolbar_layout->addWidget(test_button);
     toolbar_layout->addStretch();
 
     QVBoxLayout* main_layout = new QVBoxLayout;
@@ -74,9 +78,24 @@ std::string MainWindow::promptString(const std::string &message)
     return text;
 }
 
+bool MainWindow::promptBool(const std::string &message)
+{
+    QMessageBox::StandardButton button = QMessageBox::question(this, tr("Enter Input:"), QString::fromStdString(message));
+    return button == QMessageBox::Yes;
+}
+
 void MainWindow::displayError(const std::string &message)
 {
     QMessageBox::critical(this, "Error!", QString::fromStdString(message));
+}
+
+void MainWindow::connectionRemoved(ConnectionProxy connection)
+{
+    QString connection_id = createConnectionID(connection.outputNodeID(), connection.outputIndex(),
+                                               connection.inputNodeID(), connection.inputIndex());
+    ConnectionItem* item = connection_items_[connection_id];
+    scene_->removeItem(item);
+    scene_->views().at(0)->repaint();
 }
 
 void MainWindow::addNodeClicked()
@@ -124,12 +143,34 @@ void MainWindow::connectClicked()
                                                       input_node_item, selected_input_index_);
 
             this->scene_->addItem(item);
+
+            QString connection_id = createConnectionID(selected_output_node_id_, selected_output_index_,
+                                                       selected_input_node_id_, selected_input_index_);
+            this->connection_items_.insert(connection_id, item);
         }
     }
 
 }
 
+QString MainWindow::createConnectionID(const std::string& outputNodeID, int outputIndex,
+                                       const std::string& inputNodeID, int inputIndex) const
+{
+    QStringList list;
+
+    list << QString::fromStdString(outputNodeID);
+    list << QString::number(outputIndex);
+    list << QString::fromStdString(inputNodeID);
+    list << QString::number(inputIndex);
+
+    return list.join(",");
+}
+
 void MainWindow::executeClicked()
 {
     app_->executeTerminalNodes();
+}
+
+void MainWindow::testClicked()
+{
+    app_->addTestScenario();
 }
