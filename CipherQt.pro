@@ -43,4 +43,5 @@ HEADERS  += \
     App/Factories/NodeFactory.h \
     App/Factories/ConstantNodeFactoryDelegate.h \
     App/Factories/AdditionNodeFactoryDelegate.h \
-    App/Factories/PrinterNodeFactoryDelegate.h
+    App/Factories/PrinterNodeFactoryDelegate.h \
+    App/Factories/NodeFactoryDelegate.h

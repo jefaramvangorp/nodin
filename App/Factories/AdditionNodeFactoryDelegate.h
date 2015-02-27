@@ -2,9 +2,9 @@
 #define APP_FACTORIES_ADDITIONNODEFACTORY_H_
 
 // Includes.
-#include "App/Factories/NodeFactory.h"
+#include "App/Factories/NodeFactoryDelegate.h"
 
-class AdditionNodeFactoryDelegate : public NodeFactory::Delegate
+class AdditionNodeFactoryDelegate : public NodeFactoryDelegate
 {
 public:
     AdditionNodeFactoryDelegate();

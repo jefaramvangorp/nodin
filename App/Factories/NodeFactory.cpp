@@ -1,9 +1,10 @@
 
 // Includes.
 #include "App/Factories/NodeFactory.h"
+#include "App/Factories/NodeFactoryDelegate.h"
 
 
-NodeFactory::NodeFactory(Delegate *delegate)
+NodeFactory::NodeFactory(NodeFactoryDelegate *delegate)
     : delegate_(delegate)
     , required_parameters_(delegate_->requiredParameters())
 {

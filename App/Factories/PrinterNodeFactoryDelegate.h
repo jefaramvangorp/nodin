@@ -2,9 +2,9 @@
 #define APP_FACTORIES_PRINTERNODEFACTORYDELEGATE_H_
 
 // Includes.
-#include "App/Factories/NodeFactory.h"
+#include "App/Factories/NodeFactoryDelegate.h"
 
-class PrinterNodeFactoryDelegate : public NodeFactory::Delegate
+class PrinterNodeFactoryDelegate : public NodeFactoryDelegate
 {
 public:
     PrinterNodeFactoryDelegate();

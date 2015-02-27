@@ -2,9 +2,9 @@
 #define APP_FACTORIES_CONSTANTNODEFACTORY_H_
 
 // Includes.
-#include "App/Factories/NodeFactory.h"
+#include "App/Factories/NodeFactoryDelegate.h"
 
-class ConstantNodeFactoryDelegate : public NodeFactory::Delegate
+class ConstantNodeFactoryDelegate : public NodeFactoryDelegate
 {
 public:
     ConstantNodeFactoryDelegate();

@@ -8,22 +8,13 @@
 
 // Forward declarations.
 class Node;
+class NodeFactoryDelegate;
 
 class NodeFactory
 {
 public:
 
-    class Delegate
-    {
-    public:
-        virtual ~Delegate() {}
-        virtual std::string nodeType() const = 0;
-        virtual std::vector<std::string> requiredParameters() = 0;
-        virtual bool isValidParameter(const std::string& parameter, const std::string& value) const = 0;
-        virtual Node* createNode(const std::string& id, const std::map<std::string, std::string>& parameters) = 0;
-    };
-
-    NodeFactory(Delegate* delegate);
+    NodeFactory(NodeFactoryDelegate* delegate);
     ~NodeFactory();
 
     std::string nodeType() const;
@@ -36,7 +27,7 @@ private:
 
     bool allParametersAreValid();
 
-    Delegate* delegate_;
+    NodeFactoryDelegate* delegate_;
     std::vector<std::string> required_parameters_;
     std::map<std::string, std::string> parameters_;
 };
