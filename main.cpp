@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
     w.show();
 
     app.setUI(&w);
+    app.setDelegate(&w);
 
     return a.exec();
 }
