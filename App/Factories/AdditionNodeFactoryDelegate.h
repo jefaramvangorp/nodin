@@ -1,10 +1,19 @@
-#ifndef ADDITIONNODEFACTORY_H
-#define ADDITIONNODEFACTORY_H
+#ifndef APP_FACTORIES_ADDITIONNODEFACTORY_H_
+#define APP_FACTORIES_ADDITIONNODEFACTORY_H_
 
-class AdditionNodeFactory
+// Includes.
+#include "App/Factories/NodeFactory.h"
+
+class AdditionNodeFactoryDelegate : public NodeFactory::Delegate
 {
 public:
-    AdditionNodeFactory();
+    AdditionNodeFactoryDelegate();
+    virtual ~AdditionNodeFactoryDelegate();
+
+    virtual std::string nodeType() const;
+    virtual std::vector<std::string> requiredParameters();
+    virtual bool isValidParameter(const std::string& parameter, const std::string& value) const;
+    virtual Node* createNode(const std::string& id, const std::map<std::string, std::string>& parameters);
 };
 
-#endif // ADDITIONNODEFACTORY_H
+#endif // APP_FACTORIES_ADDITIONNODEFACTORY_H_
