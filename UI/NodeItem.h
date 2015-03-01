@@ -8,6 +8,7 @@
 // STD.
 #include <string>
 #include <vector>
+#include <QPointF>
 
 // Forward declarations.
 class NodeProxy;
@@ -20,8 +21,6 @@ public:
     {
     public:
         virtual ~Delegate() {}
-        virtual void nodeInputSelected(const std::string& nodeID, int index) {}
-        virtual void nodeOutputSelected(const std::string& nodeID, int index) {}
         virtual void nodeMoved(NodeItem* item) {}
     };
 
@@ -31,14 +30,18 @@ public:
     virtual QRectF boundingRect() const;
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
+    const std::string& nodeID() const;
     void addDelegate(Delegate* delegate);
     void removeDelegate(Delegate* delegate);
     QPointF inputPos(int index) const;
     QPointF outputPos(int index) const;
+    int indexOfInputUnder(const QPointF& pos);
+    int indexOfOutputUnder(const QPointF& pos);
+    void setHighlightInput(int index);
+    void setHighlightOutput(int index);
 
 protected:
 
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
 private:

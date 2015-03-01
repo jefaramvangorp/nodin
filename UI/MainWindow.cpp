@@ -17,16 +17,25 @@
 #include <QPushButton>
 #include <QGraphicsLineItem>
 
+#include <QDebug>
+#include <iostream>
+
 MainWindow::MainWindow(App *app, QWidget *parent)
     : QMainWindow(parent)
+    , scene_(nullptr)
+    , scene_view_(nullptr)
     , app_(app)
+    , temp_line_item_(new QGraphicsLineItem)
+    , selected_connector_on_press_(false)
+    , selected_output_node_id_("")
+    , selected_output_index_(-1)
+    , selected_input_node_id_("")
+    , selected_input_index_(-1)
 {
-    this->scene_ = createScene();
+    scene_ = createScene();
 
     QPushButton* add_node_button = new QPushButton(tr("Add node"));
     connect(add_node_button, &QPushButton::clicked, this, &MainWindow::addNodeClicked);
-    QPushButton* connect_button = new QPushButton(tr("Connect"));
-    connect(connect_button, &QPushButton::clicked, this, &MainWindow::connectClicked);
     QPushButton* execute_button = new QPushButton(tr("Execute"));
     connect(execute_button, &QPushButton::clicked, this, &MainWindow::executeClicked);
     QPushButton* test_button = new QPushButton(tr("Test"));
@@ -34,14 +43,16 @@ MainWindow::MainWindow(App *app, QWidget *parent)
 
     QHBoxLayout* toolbar_layout = new QHBoxLayout;
     toolbar_layout->addWidget(add_node_button);
-    toolbar_layout->addWidget(connect_button);
     toolbar_layout->addWidget(execute_button);
     toolbar_layout->addWidget(test_button);
     toolbar_layout->addStretch();
 
+    scene_view_ = new NetworkSceneView(scene_);
+    scene_view_->setDelegate(this);
+
     QVBoxLayout* main_layout = new QVBoxLayout;
     main_layout->addLayout(toolbar_layout);
-    main_layout->addWidget(new QGraphicsView(this->scene_));
+    main_layout->addWidget(scene_view_);
 
     QWidget* central_widget = new QWidget;
     central_widget->setLayout(main_layout);
@@ -58,18 +69,6 @@ QGraphicsScene *MainWindow::createScene()
 MainWindow::~MainWindow()
 {
 
-}
-
-void MainWindow::nodeInputSelected(const std::string &nodeID, int index)
-{
-    this->selected_input_node_id_ = nodeID;
-    this->selected_input_index_ = index;
-}
-
-void MainWindow::nodeOutputSelected(const std::string &nodeID, int index)
-{
-    this->selected_output_node_id_ = nodeID;
-    this->selected_output_index_ = index;
 }
 
 std::string MainWindow::promptString(const std::string &message)
@@ -98,6 +97,105 @@ void MainWindow::connectionRemoved(ConnectionProxy connection)
     scene_->views().at(0)->repaint();
 }
 
+void MainWindow::networkSceneViewPressedAt(const QPoint &pos)
+{
+    selected_input_index_ = -1;
+    selected_input_node_id_ = "";
+    selected_output_index_ = -1;
+    selected_output_node_id_ = "";
+
+    selected_connector_on_press_ = selectInputIfUnderPos(pos) || selectOutputIfUnderPos(pos);
+
+    if (selected_connector_on_press_)
+    {
+        QPointF item_pos = temp_line_item_->mapFromScene(scene_view_->mapToScene(pos));
+
+        temp_line_.setPoints(item_pos, item_pos);
+        temp_line_item_->setLine(temp_line_);
+        scene_->addItem(temp_line_item_);
+    }
+}
+
+void MainWindow::networkSceneViewReleasedAt(const QPoint &pos)
+{
+    if (temp_line_item_->scene() == scene_)
+    {
+        scene_->removeItem(temp_line_item_);
+    }
+    bool selected_connector_on_release = selectInputIfUnderPos(pos) || selectOutputIfUnderPos(pos);
+
+    if (selected_connector_on_press_ && selected_connector_on_release)
+    {
+        addConnectionBetweenSelectedNodes();
+    }
+
+    selected_connector_on_press_ = false;
+}
+
+void MainWindow::networkSceneViewMoved(const QPoint &pos)
+{
+    if (selected_connector_on_press_)
+    {
+        QPointF item_pos = temp_line_item_->mapFromScene(scene_view_->mapToScene(pos));
+        temp_line_.setP2(item_pos);
+        temp_line_item_->setLine(temp_line_);
+    }
+}
+
+bool MainWindow::selectInputIfUnderPos(const QPoint &pos)
+{
+    QPointF scene_pos = scene_view_->mapToScene(pos);
+    NodeItem* item_under_pos = dynamic_cast<NodeItem*>(scene_->itemAt(scene_pos, scene_view_->transform()));
+
+    if (item_under_pos != nullptr)
+    {
+        QPointF item_pos = item_under_pos->mapFromScene(scene_pos);
+
+        int input_index = item_under_pos->indexOfInputUnder(item_pos);
+        if (input_index != -1)
+        {
+            selected_input_index_ = input_index;
+            selected_input_node_id_ = item_under_pos->nodeID();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool MainWindow::selectOutputIfUnderPos(const QPoint& pos)
+{
+    QPointF scene_pos = scene_view_->mapToScene(pos);
+    NodeItem* item_under_pos = dynamic_cast<NodeItem*>(scene_->itemAt(scene_pos, scene_view_->transform()));
+
+    if (item_under_pos != nullptr)
+    {
+        QPointF item_pos = item_under_pos->mapFromScene(scene_pos);
+
+        int output_index = item_under_pos->indexOfOutputUnder(item_pos);
+        if (output_index != -1)
+        {
+            selected_output_index_ = output_index;
+            selected_output_node_id_ = item_under_pos->nodeID();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
 void MainWindow::addNodeClicked()
 {
     std::vector<std::string> node_types = app_->availableNodeTypes();
@@ -115,15 +213,15 @@ void MainWindow::addNodeClicked()
     {
         const NodeProxy* node = app_->createNode(title);
         NodeItem* node_item = new NodeItem(node);
-        node_item->addDelegate(this);
-        this->scene_->addItem(node_item);
-        this->node_items.insert(node->id(), node_item);
+        scene_->addItem(node_item);
+        node_items_.insert(node->id(), node_item);
     }
 }
 
-void MainWindow::connectClicked()
+void MainWindow::addConnectionBetweenSelectedNodes()
 {
-    if (selected_input_node_id_.empty() || selected_output_node_id_.empty())
+    if (selected_input_node_id_.empty() || selected_input_index_ == -1 ||
+        selected_output_node_id_.empty() || selected_output_index_ == -1)
     {
         return;
     }
@@ -136,17 +234,17 @@ void MainWindow::connectClicked()
 
         if (ok)
         {
-            NodeItem* output_node_item = this->node_items.value(selected_output_node_id_);
-            NodeItem* input_node_item = this->node_items.value(selected_input_node_id_);
+            NodeItem* output_node_item = node_items_.value(selected_output_node_id_);
+            NodeItem* input_node_item = node_items_.value(selected_input_node_id_);
 
             ConnectionItem* item = new ConnectionItem(output_node_item, selected_output_index_,
                                                       input_node_item, selected_input_index_);
 
-            this->scene_->addItem(item);
+            scene_->addItem(item);
 
             QString connection_id = createConnectionID(selected_output_node_id_, selected_output_index_,
                                                        selected_input_node_id_, selected_input_index_);
-            this->connection_items_.insert(connection_id, item);
+            connection_items_.insert(connection_id, item);
         }
     }
 
