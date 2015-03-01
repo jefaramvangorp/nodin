@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     App/Factories/NodeFactory.cpp \
     App/Factories/AdditionNodeFactoryDelegate.cpp \
     App/Factories/ConstantNodeFactoryDelegate.cpp \
-    App/Factories/PrinterNodeFactoryDelegate.cpp
+    App/Factories/PrinterNodeFactoryDelegate.cpp \
+    UI/NetworkSceneView.cpp
 
 HEADERS  += \
     UI/NodeItem.h \
@@ -44,4 +45,5 @@ HEADERS  += \
     App/Factories/ConstantNodeFactoryDelegate.h \
     App/Factories/AdditionNodeFactoryDelegate.h \
     App/Factories/PrinterNodeFactoryDelegate.h \
-    App/Factories/NodeFactoryDelegate.h
+    App/Factories/NodeFactoryDelegate.h \
+    UI/NetworkSceneView.h
