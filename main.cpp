@@ -10,6 +10,13 @@
 // Qt.
 #include <QApplication>
 
+QString titleString()
+{
+    QString name = QString::fromStdString(App::appName());
+    QString version = QString::fromStdString(App::appVersion());
+    return QString("%1 - v%2").arg(name).arg(version);
+}
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -20,6 +27,7 @@ int main(int argc, char *argv[])
     app.addNodeFactory(new PrinterNodeFactoryDelegate);
 
     MainWindow w(&app);
+    w.setWindowTitle(titleString());
     w.setMinimumSize(640, 480);
     w.show();
 

@@ -39,6 +39,9 @@ public:
     App();
     ~App();
 
+    static std::string appName() { return "Nodin"; }
+    static std::string appVersion() { return "0.2"; }
+
     void setUI(UI* ui) { ui_ = ui; }
     void setDelegate(Delegate* delegate) { delegate_ = delegate; }
 
