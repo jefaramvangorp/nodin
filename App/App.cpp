@@ -63,11 +63,16 @@ const NodeProxy* App::createNode(const std::string &type)
         if (factory->nodeType() == type)
         {
             const std::vector<std::string>& required_params = factory->requiredParameters();
-            for (int i = 0; i < required_params.size(); ++i)
+
+            if (!required_params.empty())
             {
-                std::string param = required_params[i];
-                std::string value = ui_->promptString(param);
-                factory->setParameterValue(param, value);
+                std::map<std::string, std::string> param_values = ui_->promptParameters(required_params);
+
+                for (int i = 0; i < required_params.size(); ++i)
+                {
+                    std::string param = required_params[i];
+                    factory->setParameterValue(param, param_values[param]);
+                }
             }
 
             node = factory->createNode(id);

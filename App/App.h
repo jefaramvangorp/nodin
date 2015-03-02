@@ -23,6 +23,7 @@ public:
         virtual ~UI() {}
         virtual std::string promptString(const std::string& message) = 0;
         virtual bool promptBool(const std::string& message) = 0;
+        virtual std::map<std::string, std::string> promptParameters(const std::vector<std::string>& parameters) = 0;
         virtual void displayError(const std::string& message) = 0;
 
     };
