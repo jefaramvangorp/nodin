@@ -15,10 +15,78 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QDialog>
+#include <QLabel>
+#include <QLineEdit>
+#include <QGridLayout>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QGraphicsLineItem>
 
-#include <QDebug>
-#include <iostream>
+
+class ParametersDialog : public QDialog
+{
+public:
+
+    ParametersDialog(const std::vector<std::string>& parameters, QWidget* parent = 0)
+        : QDialog(parent)
+    {
+        QGridLayout* param_layout = new QGridLayout;
+
+        for (int i = 0; i < (int)parameters.size(); ++i)
+        {
+            std::string parameter = parameters.at(i);
+            QLabel* parameter_label = new QLabel(QString::fromStdString(parameter));
+            QLineEdit* parameter_field = new QLineEdit;
+
+            param_layout->addWidget(parameter_label, i, 0);
+            param_layout->addWidget(parameter_field, i, 1);
+
+            parameter_fields_.insert(parameter, parameter_field);
+        }
+
+        QPushButton* ok_button = new QPushButton(tr("Ok"));
+        connect(ok_button, &QPushButton::clicked, this, &QDialog::accept);
+        QPushButton* cancel_button = new QPushButton(tr("Cancel"));
+        connect(cancel_button, &QPushButton::clicked, this, &QDialog::reject);
+
+        ok_button->setFocus();
+
+        QHBoxLayout* button_layout = new QHBoxLayout;
+        button_layout->addStretch();
+        button_layout->addWidget(ok_button);
+        button_layout->addWidget(cancel_button);
+        button_layout->addStretch();
+
+        QVBoxLayout* layout = new QVBoxLayout;
+        layout->addLayout(param_layout);
+        layout->addLayout(button_layout);
+        setLayout(layout);
+    }
+
+    std::map<std::string, std::string> parameterValues() const
+    {
+        std::map<std::string, std::string> result;
+
+        foreach (std::string param, parameter_fields_.keys())
+        {
+            result[param] = parameter_fields_.value(param)->text().toStdString();
+        }
+
+        return result;
+    }
+
+    std::string valueForParameter(const std::string& parameter) const
+    {
+        return parameter_fields_[parameter]->text().toStdString();
+    }
+
+private:
+
+    QMap<std::string, QLineEdit*> parameter_fields_;
+
+};
+
 
 MainWindow::MainWindow(App *app, QWidget *parent)
     : QMainWindow(parent)
@@ -81,6 +149,22 @@ bool MainWindow::promptBool(const std::string &message)
 {
     QMessageBox::StandardButton button = QMessageBox::question(this, tr("Enter Input:"), QString::fromStdString(message));
     return button == QMessageBox::Yes;
+}
+
+std::map<std::string, std::string> MainWindow::promptParameters(const std::vector<std::string> &parameters)
+{
+    ParametersDialog dialog(parameters, this);
+    dialog.setWindowTitle(tr("Enter parameters:"));
+
+    int result = dialog.exec();
+    if (result == QDialog::Accepted)
+    {
+        return dialog.parameterValues();
+    }
+    else
+    {
+        return std::map<std::string, std::string>();
+    }
 }
 
 void MainWindow::displayError(const std::string &message)
@@ -212,9 +296,13 @@ void MainWindow::addNodeClicked()
     if (ok_was_clicked)
     {
         const NodeProxy* node = app_->createNode(title);
-        NodeItem* node_item = new NodeItem(node);
-        scene_->addItem(node_item);
-        node_items_.insert(node->id(), node_item);
+
+        if (node != nullptr)
+        {
+            NodeItem* node_item = new NodeItem(node);
+            scene_->addItem(node_item);
+            node_items_.insert(node->id(), node_item);
+        }
     }
 }
 

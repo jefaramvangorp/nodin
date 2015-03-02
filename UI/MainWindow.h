@@ -30,6 +30,7 @@ public:
     // App::UI interface.
     virtual std::string promptString(const std::string& message);
     virtual bool promptBool(const std::string& message);
+    virtual std::map<std::string, std::string> promptParameters(const std::vector<std::string>& parameters);
     virtual void displayError(const std::string& message);
 
     // App::Delegate interface.
