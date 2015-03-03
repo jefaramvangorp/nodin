@@ -100,18 +100,21 @@ MainWindow::MainWindow(App *app, QWidget *parent)
     , selected_input_node_id_("")
     , selected_input_index_(-1)
 {
-    scene_ = createScene();
+    scene_ = new QGraphicsScene;
 
     QPushButton* add_node_button = new QPushButton(tr("Add node"));
     connect(add_node_button, &QPushButton::clicked, this, &MainWindow::addNodeClicked);
     QPushButton* execute_button = new QPushButton(tr("Execute"));
     connect(execute_button, &QPushButton::clicked, this, &MainWindow::executeClicked);
+    QPushButton* clear_button = new QPushButton(tr("Clear"));
+    connect(clear_button, &QPushButton::clicked, this, &MainWindow::clearClicked);
     QPushButton* test_button = new QPushButton(tr("Test"));
     connect(test_button, &QPushButton::clicked, this, &MainWindow::testClicked);
 
     QHBoxLayout* toolbar_layout = new QHBoxLayout;
     toolbar_layout->addWidget(add_node_button);
     toolbar_layout->addWidget(execute_button);
+    toolbar_layout->addWidget(clear_button);
     toolbar_layout->addWidget(test_button);
     toolbar_layout->addStretch();
 
@@ -127,16 +130,13 @@ MainWindow::MainWindow(App *app, QWidget *parent)
     setCentralWidget(central_widget);
 }
 
-QGraphicsScene *MainWindow::createScene()
-{
-    QGraphicsScene* scene = new QGraphicsScene;
-
-    return scene;
-}
-
 MainWindow::~MainWindow()
 {
-
+    scene_view_->setScene(nullptr);
+    delete scene_;
+    delete temp_line_item_;
+    node_items_.clear();
+    connection_items_.clear();
 }
 
 std::string MainWindow::promptString(const std::string &message)
@@ -177,8 +177,12 @@ void MainWindow::connectionRemoved(ConnectionProxy connection)
     QString connection_id = createConnectionID(connection.outputNodeID(), connection.outputIndex(),
                                                connection.inputNodeID(), connection.inputIndex());
     ConnectionItem* item = connection_items_[connection_id];
+    connection_items_.remove(connection_id);
+
     scene_->removeItem(item);
     scene_->views().at(0)->repaint();
+
+    delete item;
 }
 
 void MainWindow::networkSceneViewPressedAt(const QPoint &pos)
@@ -224,6 +228,11 @@ void MainWindow::networkSceneViewMoved(const QPoint &pos)
         temp_line_.setP2(item_pos);
         temp_line_item_->setLine(temp_line_);
     }
+}
+
+void MainWindow::nodeMoved(NodeItem *item)
+{
+    scene_->update(scene_view_->sceneRect());
 }
 
 bool MainWindow::selectInputIfUnderPos(const QPoint &pos)
@@ -302,6 +311,7 @@ void MainWindow::addNodeClicked()
             NodeItem* node_item = new NodeItem(node);
             scene_->addItem(node_item);
             node_items_.insert(node->id(), node_item);
+            node_item->addDelegate(this);
         }
     }
 }
@@ -327,7 +337,6 @@ void MainWindow::addConnectionBetweenSelectedNodes()
 
             ConnectionItem* item = new ConnectionItem(output_node_item, selected_output_index_,
                                                       input_node_item, selected_input_index_);
-
             scene_->addItem(item);
 
             QString connection_id = createConnectionID(selected_output_node_id_, selected_output_index_,
@@ -354,6 +363,22 @@ QString MainWindow::createConnectionID(const std::string& outputNodeID, int outp
 void MainWindow::executeClicked()
 {
     app_->executeTerminalNodes();
+}
+
+void MainWindow::clearClicked()
+{
+    bool ok = app_->clearAllNodes();
+
+    if (ok)
+    {
+        scene_view_->setScene(nullptr);
+        delete scene_;
+        node_items_.clear();
+        connection_items_.clear();
+        
+        scene_ = new QGraphicsScene;
+        scene_view_->setScene(scene_);
+    }
 }
 
 void MainWindow::testClicked()

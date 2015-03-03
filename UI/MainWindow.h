@@ -19,7 +19,7 @@ class QGraphicsScene;
 class QGraphicsLineItem;
 class ConnectionItem;
 
-class MainWindow : public QMainWindow, public App::UI, public App::Delegate, public NetworkSceneView::Delegate
+class MainWindow : public QMainWindow, public App::UI, public App::Delegate, public NetworkSceneView::Delegate, public NodeItem::Delegate
 {
     Q_OBJECT
 
@@ -41,15 +41,18 @@ public:
     virtual void networkSceneViewReleasedAt(const QPoint& pos);
     virtual void networkSceneViewMoved(const QPoint& pos);
 
+    // NodeItem::Delegate interface.
+    virtual void nodeMoved(NodeItem* item);
+
 private slots:
 
     void addNodeClicked();
     void executeClicked();
+    void clearClicked();
     void testClicked();
 
 private:
 
-    QGraphicsScene* createScene();
     QString createConnectionID(const std::string &outputNodeID, int outputIndex,
                                const std::string &inputNodeID, int inputIndex) const;
     bool selectInputIfUnderPos(const QPoint &pos);
