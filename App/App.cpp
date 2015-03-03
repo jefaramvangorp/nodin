@@ -19,13 +19,7 @@ App::App()
 
 App::~App()
 {
-    std::map<std::string, Node*>::iterator nodes_iter;
-    for (nodes_iter = nodes_.begin(); nodes_iter != nodes_.end(); ++nodes_iter)
-    {
-        delete (*nodes_iter).second;
-    }
-    nodes_.clear();
-    terminal_nodes_.clear();
+    removeAllNodes();
 
     std::vector<NodeFactory*>::iterator factories_iter;
     for (factories_iter = node_factories_.begin(); factories_iter != node_factories_.end(); ++factories_iter)
@@ -175,6 +169,29 @@ void App::executeTerminalNodes() const
             fprintf(stderr, "%s\n", terminal_node->errorMessage().c_str());
         }
     }
+}
+
+bool App::clearAllNodes()
+{
+    bool ok = ui_->promptBool("Are you certain you want to remove all nodes?");
+
+    if (ok)
+    {
+        removeAllNodes();
+    }
+
+    return ok;
+}
+
+void App::removeAllNodes()
+{
+    std::map<std::string, Node*>::iterator nodes_iter;
+    for (nodes_iter = nodes_.begin(); nodes_iter != nodes_.end(); ++nodes_iter)
+    {
+        delete (*nodes_iter).second;
+    }
+    nodes_.clear();
+    terminal_nodes_.clear();
 }
 
 void App::addTestScenario()

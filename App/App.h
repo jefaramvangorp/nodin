@@ -51,6 +51,7 @@ public:
     bool connectNodes(const std::string& outputNodeID, int outputIndex,
                                    const std::string& inputNodeID, int inputIndex);
     void executeTerminalNodes() const;
+    bool clearAllNodes();
 
     // For debugging purposes, do not use.
     void addTestScenario();
@@ -58,6 +59,7 @@ public:
 private:
 
     void addNode(Node* node);
+    void removeAllNodes();
 
     UI* ui_;
     Delegate* delegate_;
