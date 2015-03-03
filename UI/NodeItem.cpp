@@ -47,6 +47,8 @@ QRectF NodeItem::boundingRect() const
 
 void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    painter->setRenderHint(QPainter::Antialiasing, true);
+
     drawNodeBox(painter);
     drawText(painter);
     drawInputs(painter);
@@ -140,8 +142,9 @@ void NodeItem::setHighlightOutput(int index)
 
 void NodeItem::drawNodeBox(QPainter *painter) const
 {
-    painter->fillRect(nodeBoxRect(), Qt::green);
-    painter->drawRect(nodeBoxRect());
+    QPainterPath path;
+    path.addRoundedRect(nodeBoxRect(), 5, 5);
+    painter->drawPath(path);
 }
 
 void NodeItem::drawText(QPainter *painter) const
@@ -155,7 +158,6 @@ void NodeItem::drawInputs(QPainter *painter) const
     for (int i = 0; i < node_->numInputs(); ++i)
     {
         QPainterPath path = pathForInput(i);
-        painter->fillPath(path, QBrush(selected_input_index_ == i ? Qt::yellow : Qt::red));
         painter->drawPath(path);
     }
 }
@@ -165,7 +167,6 @@ void NodeItem::drawOutputs(QPainter *painter) const
     for (int i = 0; i < node_->numOutputs(); ++i)
     {
         QPainterPath path = pathForOutput(i);
-        painter->fillPath(path, QBrush(selected_output_index_ == i ? Qt::cyan : Qt::blue));
         painter->drawPath(path);
     }
 }
