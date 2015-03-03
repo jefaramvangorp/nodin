@@ -1,14 +1,14 @@
 #ifndef UI_CONNECTIONITEM_H_
 #define UI_CONNECTIONITEM_H_
 
-// Includes.
-#include "NodeItem.h"
-
 // Qt.
 #include <QGraphicsItem>
 #include <QPainterPath>
 
-class ConnectionItem : public QGraphicsItem, public NodeItem::Delegate
+// Forward declarations.
+class NodeItem;
+
+class ConnectionItem : public QGraphicsItem
 {
 public:
     ConnectionItem(NodeItem* outputItem, int outputIndex,
@@ -18,9 +18,6 @@ public:
     // QGraphicsItem interface.
     virtual QRectF boundingRect() const;
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-
-    // NodeItem::Delegate interface.
-    virtual void nodeMoved(NodeItem* item);
 
 private:
 

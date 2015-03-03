@@ -1,6 +1,7 @@
 
 // Includes.
-#include "ConnectionItem.h"
+#include "UI/ConnectionItem.h"
+#include "UI/NodeItem.h"
 
 // Qt.
 #include <QPainter>
@@ -11,14 +12,12 @@ ConnectionItem::ConnectionItem(NodeItem *outputItem, int outputIndex, NodeItem *
     , output_index_(outputIndex)
     , input_index_(inputIndex)
 {
-    this->output_item_->addDelegate(this);
-    this->input_item_->addDelegate(this);
+
 }
 
 ConnectionItem::~ConnectionItem()
 {
-    this->output_item_->removeDelegate(this);
-    this->input_item_->removeDelegate(this);
+
 }
 
 QRectF ConnectionItem::boundingRect() const
@@ -29,12 +28,6 @@ QRectF ConnectionItem::boundingRect() const
 void ConnectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->drawPath(connectionLine());
-}
-
-void ConnectionItem::nodeMoved(NodeItem *item)
-{
-    prepareGeometryChange();
-    update(boundingRect());
 }
 
 QPainterPath ConnectionItem::connectionLine() const
