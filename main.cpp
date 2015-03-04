@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 
     MainWindow w(&app);
     w.setWindowTitle(titleString());
-    w.setMinimumSize(640, 480);
+    w.setMinimumSize(800, 600);
     w.show();
 
     app.setUI(&w);
