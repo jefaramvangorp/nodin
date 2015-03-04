@@ -134,7 +134,7 @@ MainWindow::MainWindow(App *app, QWidget *parent)
     types_list_->setMaximumWidth(150);
     types_list_->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     types_list_->addItems(types);
-    types_list_->setCurrentItem(types_list_->item(0));
+    types_list_->setSelectionMode(QAbstractItemView::SingleSelection);
 
     QHBoxLayout* central_layout = new QHBoxLayout;
     central_layout->addWidget(types_list_);
@@ -310,16 +310,19 @@ bool MainWindow::selectOutputIfUnderPos(const QPoint& pos)
 
 void MainWindow::addNodeClicked()
 {
-    std::string type = types_list_->selectedItems().first()->text().toStdString();
-
-    const NodeProxy* node = app_->createNode(type);
-
-    if (node != nullptr)
+    foreach (QListWidgetItem* item, types_list_->selectedItems())
     {
-        NodeItem* node_item = new NodeItem(node);
-        scene_->addItem(node_item);
-        node_items_.insert(node->id(), node_item);
-        node_item->addDelegate(this);
+        std::string type = item->text().toStdString();
+
+        const NodeProxy* node = app_->createNode(type);
+
+        if (node != nullptr)
+        {
+            NodeItem* node_item = new NodeItem(node);
+            scene_->addItem(node_item);
+            node_items_.insert(node->id(), node_item);
+            node_item->addDelegate(this);
+        }
     }
 }
 
