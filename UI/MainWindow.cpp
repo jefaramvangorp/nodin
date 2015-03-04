@@ -21,6 +21,8 @@
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QListWidget>
+#include <QStringListModel>
 #include <QGraphicsLineItem>
 
 
@@ -87,11 +89,11 @@ private:
 
 };
 
-
 MainWindow::MainWindow(App *app, QWidget *parent)
     : QMainWindow(parent)
-    , scene_(nullptr)
+    , types_list_(nullptr)
     , scene_view_(nullptr)
+    , scene_(nullptr)
     , app_(app)
     , temp_line_item_(new QGraphicsLineItem)
     , selected_connector_on_press_(false)
@@ -120,10 +122,27 @@ MainWindow::MainWindow(App *app, QWidget *parent)
 
     scene_view_ = new NetworkSceneView(scene_);
     scene_view_->setDelegate(this);
+    scene_view_->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+
+    QStringList types;
+    std::vector<std::string> available_types = app->availableNodeTypes();
+    for (int i = 0; i < (int)available_types.size(); ++i)
+    {
+        types << QString::fromStdString(available_types[i]);
+    }
+    types_list_ = new QListWidget;
+    types_list_->setMaximumWidth(150);
+    types_list_->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    types_list_->addItems(types);
+    types_list_->setCurrentItem(types_list_->item(0));
+
+    QHBoxLayout* central_layout = new QHBoxLayout;
+    central_layout->addWidget(types_list_);
+    central_layout->addWidget(scene_view_);
 
     QVBoxLayout* main_layout = new QVBoxLayout;
     main_layout->addLayout(toolbar_layout);
-    main_layout->addWidget(scene_view_);
+    main_layout->addLayout(central_layout);
 
     QWidget* central_widget = new QWidget;
     central_widget->setLayout(main_layout);

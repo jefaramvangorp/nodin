@@ -18,6 +18,7 @@
 class QGraphicsScene;
 class QGraphicsLineItem;
 class ConnectionItem;
+class QListWidget;
 
 class MainWindow : public QMainWindow, public App::UI, public App::Delegate, public NetworkSceneView::Delegate, public NodeItem::Delegate
 {
@@ -59,8 +60,10 @@ private:
     bool selectOutputIfUnderPos(const QPoint &pos);
     void addConnectionBetweenSelectedNodes();
 
-    QGraphicsScene* scene_;
+    QListWidget* types_list_;
     NetworkSceneView* scene_view_;
+
+    QGraphicsScene* scene_;
     App* app_;
     QMap<std::string, NodeItem*> node_items_;
     QMap<QString, ConnectionItem*> connection_items_;
