@@ -144,6 +144,7 @@ void NodeItem::drawNodeBox(QPainter *painter) const
 {
     QPainterPath path;
     path.addRoundedRect(nodeBoxRect(), 5, 5);
+    painter->fillPath(path, QBrush(Qt::white));
     painter->drawPath(path);
 }
 
@@ -158,6 +159,7 @@ void NodeItem::drawInputs(QPainter *painter) const
     for (int i = 0; i < node_->numInputs(); ++i)
     {
         QPainterPath path = pathForInput(i);
+        painter->fillPath(path, QBrush(Qt::white));
         painter->drawPath(path);
     }
 }
@@ -167,6 +169,7 @@ void NodeItem::drawOutputs(QPainter *painter) const
     for (int i = 0; i < node_->numOutputs(); ++i)
     {
         QPainterPath path = pathForOutput(i);
+        painter->fillPath(path, QBrush(Qt::white));
         painter->drawPath(path);
     }
 }
