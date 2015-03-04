@@ -310,28 +310,16 @@ bool MainWindow::selectOutputIfUnderPos(const QPoint& pos)
 
 void MainWindow::addNodeClicked()
 {
-    std::vector<std::string> node_types = app_->availableNodeTypes();
-    QStringList items;
-    for (int i = 0; i < (int) node_types.size(); ++i)
+    std::string type = types_list_->selectedItems().first()->text().toStdString();
+
+    const NodeProxy* node = app_->createNode(type);
+
+    if (node != nullptr)
     {
-        items.append(QString::fromStdString(node_types[i]));
-    }
-
-    bool ok_was_clicked = false;
-    std::string title = QInputDialog::getItem(this, tr("Add node"), tr("Choose node type"), items, 0, true, &ok_was_clicked).toStdString();
-
-
-    if (ok_was_clicked)
-    {
-        const NodeProxy* node = app_->createNode(title);
-
-        if (node != nullptr)
-        {
-            NodeItem* node_item = new NodeItem(node);
-            scene_->addItem(node_item);
-            node_items_.insert(node->id(), node_item);
-            node_item->addDelegate(this);
-        }
+        NodeItem* node_item = new NodeItem(node);
+        scene_->addItem(node_item);
+        node_items_.insert(node->id(), node_item);
+        node_item->addDelegate(this);
     }
 }
 
