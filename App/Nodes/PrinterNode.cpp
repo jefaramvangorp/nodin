@@ -1,6 +1,7 @@
 
 // Includes.
 #include "App/Nodes/PrinterNode.h"
+#include "App/Logger.h"
 
 // STD.
 #include <iostream>
@@ -12,6 +13,6 @@ PrinterNode::PrinterNode(const std::string &id)
 
 bool PrinterNode::computeValueAtOutput(const std::vector<std::string>& inputs, int outputIndex, std::string *output)
 {
-    fprintf(stderr, "%s\n", inputs[0].c_str());
+    Logger::instance().logMessage(inputs[0]);
     return true;
 }
