@@ -19,7 +19,7 @@ namespace
     const int INNER_MARGIN = 10; // Margin between node box and text rect.
 }
 
-NodeItem::NodeItem(const NodeProxy *node)
+NodeItem::NodeItem(const NodeProxy &node)
     : node_(node)
     , selected_input_index_(-1)
     , selected_output_index_(-1)
@@ -31,16 +31,16 @@ NodeItem::NodeItem(const NodeProxy *node)
 
 NodeItem::~NodeItem()
 {
-    delete node_;
+
 }
 
 QRectF NodeItem::boundingRect() const
 {
-    int max_connections = qMax(node_->numInputs(), node_->numOutputs());
+    int max_connections = qMax(node_.numInputs(), node_.numOutputs());
     qreal height = max_connections * OUTER_MARGIN + (max_connections-1) * OUTER_MARGIN + 4 * OUTER_MARGIN;
 
     QFontMetrics metrics(font());
-    qreal width = metrics.width(QString::fromStdString(node_->name())) + 2 * INNER_MARGIN + 4 * OUTER_MARGIN;
+    qreal width = metrics.width(QString::fromStdString(node_.name())) + 2 * INNER_MARGIN + 4 * OUTER_MARGIN;
 
     return QRectF(-width / 2, -height / 2, width, height);
 }
@@ -57,7 +57,7 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 
 const std::string &NodeItem::nodeID() const
 {
-    return node_->id();
+    return node_.id();
 }
 
 void NodeItem::addDelegate(NodeItem::Delegate *delegate)
@@ -88,7 +88,7 @@ QPointF NodeItem::outputPos(int index) const
 
 int NodeItem::indexOfInputUnder(const QPointF &pos)
 {
-    for (int i = 0; i < node_->numInputs(); ++i)
+    for (int i = 0; i < node_.numInputs(); ++i)
     {
         QPainterPath path = pathForInput(i);
         if (path.contains(pos))
@@ -102,7 +102,7 @@ int NodeItem::indexOfInputUnder(const QPointF &pos)
 
 int NodeItem::indexOfOutputUnder(const QPointF &pos)
 {
-    for (int i = 0; i < node_->numOutputs(); ++i)
+    for (int i = 0; i < node_.numOutputs(); ++i)
     {
         QPainterPath path = pathForOutput(i);
         if (path.contains(pos))
@@ -116,7 +116,7 @@ int NodeItem::indexOfOutputUnder(const QPointF &pos)
 
 void NodeItem::setHighlightInput(int index)
 {
-    if (index >= 0 && index < node_->numInputs())
+    if (index >= 0 && index < node_.numInputs())
     {
         selected_input_index_ = index;
     }
@@ -129,7 +129,7 @@ void NodeItem::setHighlightInput(int index)
 
 void NodeItem::setHighlightOutput(int index)
 {
-    if (index >= 0 && index < node_->numOutputs())
+    if (index >= 0 && index < node_.numOutputs())
     {
         selected_output_index_ = index;
     }
@@ -151,12 +151,12 @@ void NodeItem::drawNodeBox(QPainter *painter) const
 void NodeItem::drawText(QPainter *painter) const
 {
     painter->setFont(font());
-    painter->drawText(textRect(), Qt::AlignCenter, QString::fromStdString(node_->name()));
+    painter->drawText(textRect(), Qt::AlignCenter, QString::fromStdString(node_.name()));
 }
 
 void NodeItem::drawInputs(QPainter *painter) const
 {
-    for (int i = 0; i < node_->numInputs(); ++i)
+    for (int i = 0; i < node_.numInputs(); ++i)
     {
         QPainterPath path = pathForInput(i);
         painter->fillPath(path, QBrush(Qt::white));
@@ -166,7 +166,7 @@ void NodeItem::drawInputs(QPainter *painter) const
 
 void NodeItem::drawOutputs(QPainter *painter) const
 {
-    for (int i = 0; i < node_->numOutputs(); ++i)
+    for (int i = 0; i < node_.numOutputs(); ++i)
     {
         QPainterPath path = pathForOutput(i);
         painter->fillPath(path, QBrush(Qt::white));
@@ -176,7 +176,7 @@ void NodeItem::drawOutputs(QPainter *painter) const
 
 QPainterPath NodeItem::pathForInput(int index) const
 {
-    qreal start_y = -(node_->numInputs() * OUTER_MARGIN + (node_->numInputs()-1) * OUTER_MARGIN) / 2;
+    qreal start_y = -(node_.numInputs() * OUTER_MARGIN + (node_.numInputs()-1) * OUTER_MARGIN) / 2;
     qreal x = boundingRect().left();
     qreal y = start_y + index * 2 * OUTER_MARGIN;
 
@@ -188,7 +188,7 @@ QPainterPath NodeItem::pathForInput(int index) const
 
 QPainterPath NodeItem::pathForOutput(int index) const
 {
-    qreal start_y = -(node_->numOutputs() * OUTER_MARGIN + (node_->numOutputs()-1) * OUTER_MARGIN) / 2;
+    qreal start_y = -(node_.numOutputs() * OUTER_MARGIN + (node_.numOutputs()-1) * OUTER_MARGIN) / 2;
     qreal x = boundingRect().right() - OUTER_MARGIN / 2;
     qreal radius = OUTER_MARGIN / 2;
     qreal y = start_y + (index * 2 * OUTER_MARGIN) + (OUTER_MARGIN / 2);

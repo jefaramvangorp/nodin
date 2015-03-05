@@ -33,6 +33,8 @@ public:
     virtual bool promptBool(const std::string& message);
     virtual std::map<std::string, std::string> promptParameters(const std::vector<std::string>& parameters);
     virtual void displayError(const std::string& message);
+    virtual void nodeAdded(NodeProxy node);
+    virtual void connectionAdded(ConnectionProxy connection);
 
     // App::Delegate interface.
     virtual void connectionRemoved(ConnectionProxy connection);
@@ -60,7 +62,7 @@ private:
     bool selectInputIfUnderPos(const QPoint &pos);
     bool selectOutputIfUnderPos(const QPoint &pos);
     void addConnectionBetweenSelectedNodes();
-    void addNode(const std::string& type, const QPoint& pos);
+    void addNode(const NodeProxy &node, const QPoint &pos);
 
     QListWidget* types_list_;
     NetworkSceneView* scene_view_;
@@ -71,6 +73,7 @@ private:
     QMap<QString, ConnectionItem*> connection_items_;
     QGraphicsLineItem* temp_line_item_;
     QLineF temp_line_;
+    QPoint last_drop_pos_;
 
     bool selected_connector_on_press_;
     std::string selected_output_node_id_;

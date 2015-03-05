@@ -240,6 +240,25 @@ void MainWindow::displayError(const std::string &message)
     QMessageBox::critical(this, "Error!", QString::fromStdString(message));
 }
 
+void MainWindow::nodeAdded(NodeProxy node)
+{
+    addNode(node, this->last_drop_pos_);
+}
+
+void MainWindow::connectionAdded(ConnectionProxy connection)
+{
+    NodeItem* output_node_item = node_items_.value(connection.outputNodeID());
+    NodeItem* input_node_item = node_items_.value(connection.inputNodeID());
+
+    ConnectionItem* item = new ConnectionItem(output_node_item, connection.outputIndex(),
+                                              input_node_item, connection.inputIndex());
+    scene_->addItem(item);
+
+    QString connection_id = createConnectionID(connection.outputNodeID(), connection.outputIndex(),
+                                               connection.inputNodeID(), connection.inputIndex());
+    connection_items_.insert(connection_id, item);
+}
+
 void MainWindow::connectionRemoved(ConnectionProxy connection)
 {
     QString connection_id = createConnectionID(connection.outputNodeID(), connection.outputIndex(),
@@ -301,7 +320,8 @@ void MainWindow::networkSceneViewMoved(const QPoint &pos)
 void MainWindow::networkSceneViewNodeTypeDroppedAt(const QString &type, const QPoint &pos)
 {
     std::string type_str = type.toStdString();
-    addNode(type_str, pos);
+    last_drop_pos_ = pos;
+    app_->createNode(type_str);
 }
 
 void MainWindow::nodeMoved(NodeItem *item)
@@ -368,27 +388,23 @@ void MainWindow::addNodeClicked()
     foreach (QListWidgetItem* item, types_list_->selectedItems())
     {
         std::string type = item->text().toStdString();
-        addNode(type, QPoint(0, 0));
+        last_drop_pos_ = QPoint(0,0);
+        app_->createNode(type);
     }
 }
 
-void MainWindow::addNode(const std::string &type, const QPoint &pos)
+void MainWindow::addNode(const NodeProxy &node, const QPoint &pos)
 {
-    const NodeProxy* node = app_->createNode(type);
+    NodeItem* node_item = new NodeItem(node);
 
-    if (node != nullptr)
-    {
-        NodeItem* node_item = new NodeItem(node);
+    QPointF scene_pos = scene_view_->mapToScene(pos);
+    QTransform transform;
+    transform.translate(scene_pos.x(),scene_pos.y());
+    node_item->setTransform(transform);
 
-        QPointF scene_pos = scene_view_->mapToScene(pos);
-        QTransform transform;
-        transform.translate(scene_pos.x(),scene_pos.y());
-        node_item->setTransform(transform);
-
-        scene_->addItem(node_item);
-        node_items_.insert(node->id(), node_item);
-        node_item->addDelegate(this);
-    }
+    scene_->addItem(node_item);
+    node_items_.insert(node.id(), node_item);
+    node_item->addDelegate(this);
 }
 
 void MainWindow::addConnectionBetweenSelectedNodes()
@@ -400,24 +416,10 @@ void MainWindow::addConnectionBetweenSelectedNodes()
     }
     else
     {
-        bool ok = app_->connectNodes(selected_output_node_id_,
-                                     selected_output_index_,
-                                     selected_input_node_id_,
-                                     selected_input_index_);
-
-        if (ok)
-        {
-            NodeItem* output_node_item = node_items_.value(selected_output_node_id_);
-            NodeItem* input_node_item = node_items_.value(selected_input_node_id_);
-
-            ConnectionItem* item = new ConnectionItem(output_node_item, selected_output_index_,
-                                                      input_node_item, selected_input_index_);
-            scene_->addItem(item);
-
-            QString connection_id = createConnectionID(selected_output_node_id_, selected_output_index_,
-                                                       selected_input_node_id_, selected_input_index_);
-            connection_items_.insert(connection_id, item);
-        }
+        app_->connectNodes(selected_output_node_id_,
+                           selected_output_index_,
+                           selected_input_node_id_,
+                           selected_input_index_);
     }
 
 }
