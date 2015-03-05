@@ -1,6 +1,7 @@
 
 // Includes.
 #include "App/App.h"
+#include "App/Logger.h"
 #include "App/Nodes/Node.h"
 #include "App/Nodes/AdditionNode.h"
 #include "App/Nodes/ConstantNode.h"
@@ -38,7 +39,7 @@ bool App::addNodeFactory(NodeFactoryDelegate *delegate)
     }
     else
     {
-        fprintf(stderr, "Node factory delegate must not be NULL!\n");
+        Logger::instance().logError("Node factory delegate must not be NULL!");
         return false;
     }
 }
@@ -118,7 +119,7 @@ bool App::connectNodes(const std::string &outputNodeID, int outputIndex, const s
         }
         else
         {
-            fprintf(stderr, "%s\n", "Unable to connect to already connected output");
+            Logger::instance().logError("Unable to connect to already connected output");
             return false;
         }
     }
@@ -138,20 +139,20 @@ bool App::connectNodes(const std::string &outputNodeID, int outputIndex, const s
         }
         else
         {
-            fprintf(stderr, "%s\n", "Unable to connect to already connected input");
+            Logger::instance().logError("Unable to connect to already connected input");
             return false;
         }
     }
 
     if (!output_node->connectOutputTo(outputIndex, input_node, inputIndex))
     {
-        fprintf(stderr, "%s\n", output_node->errorMessage().c_str());
+        Logger::instance().logError(output_node->errorMessage());
         return false;
     }
 
     if (!input_node->connectInputTo(inputIndex, output_node, outputIndex))
     {
-        fprintf(stderr, "%s\n", input_node->errorMessage().c_str());
+        Logger::instance().logError(input_node->errorMessage());
         return false;
     }
 
@@ -161,18 +162,27 @@ bool App::connectNodes(const std::string &outputNodeID, int outputIndex, const s
 
 void App::executeTerminalNodes() const
 {
-    std::vector<Node*>::const_iterator iter;
-    for (iter = terminal_nodes_.begin(); iter != terminal_nodes_.end(); ++iter)
+    if(terminal_nodes_.empty())
     {
-        Node* terminal_node = *iter;
-
-        bool ok = terminal_node->executeAsTerminal();
-
-        if (!ok)
+        Logger::instance().logError("No terminal nodes, nothing to be done.");
+        return;
+    }
+    else
+    {
+        std::vector<Node*>::const_iterator iter;
+        for (iter = terminal_nodes_.begin(); iter != terminal_nodes_.end(); ++iter)
         {
-            fprintf(stderr, "%s\n", terminal_node->errorMessage().c_str());
+            Node* terminal_node = *iter;
+
+            bool ok = terminal_node->executeAsTerminal();
+
+            if (!ok)
+            {
+                Logger::instance().logError(terminal_node->errorMessage());
+            }
         }
     }
+
 }
 
 bool App::clearAllNodes()
