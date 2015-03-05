@@ -24,7 +24,9 @@
 #include <QListWidget>
 #include <QStringListModel>
 #include <QGraphicsLineItem>
-
+#include <QMouseEvent>
+#include <QDrag>
+#include <QMimeData>
 
 class ParametersDialog : public QDialog
 {
@@ -89,6 +91,52 @@ private:
 
 };
 
+class TypesWidget : public QListWidget
+{
+public:
+    TypesWidget(QWidget* parent = nullptr) : QListWidget(parent) {}
+
+protected:
+
+    virtual void mousePressEvent(QMouseEvent* e)
+    {
+        QListWidget::mousePressEvent(e);
+        if (e->button() == Qt::LeftButton)
+        {
+            drag_start_position_ = e->pos();
+        }
+    }
+
+    virtual void mouseMoveEvent(QMouseEvent *e)
+    {
+        QListWidget::mouseMoveEvent(e);
+
+        if ((e->buttons() & Qt::LeftButton) == 0)
+        {
+            return;
+        }
+        else
+        {
+            QDrag *drag = new QDrag(this);
+            QMimeData *mimeData = new QMimeData;
+
+            QListWidgetItem* item = itemAt(e->pos());
+            if (item != nullptr)
+            {
+                QString text = item->text();
+                mimeData->setData("node/type", text.toUtf8());
+                drag->setMimeData(mimeData);
+                drag->exec(Qt::CopyAction | Qt::MoveAction);
+            }
+        }
+    }
+
+private:
+
+    QPoint drag_start_position_;
+
+};
+
 MainWindow::MainWindow(App *app, QWidget *parent)
     : QMainWindow(parent)
     , types_list_(nullptr)
@@ -123,6 +171,7 @@ MainWindow::MainWindow(App *app, QWidget *parent)
     scene_view_ = new NetworkSceneView(scene_);
     scene_view_->setDelegate(this);
     scene_view_->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+    scene_view_->setAcceptDrops(true);
 
     QStringList types;
     std::vector<std::string> available_types = app->availableNodeTypes();
@@ -130,7 +179,7 @@ MainWindow::MainWindow(App *app, QWidget *parent)
     {
         types << QString::fromStdString(available_types[i]);
     }
-    types_list_ = new QListWidget;
+    types_list_ = new TypesWidget;
     types_list_->setMaximumWidth(150);
     types_list_->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     types_list_->addItems(types);
@@ -249,6 +298,12 @@ void MainWindow::networkSceneViewMoved(const QPoint &pos)
     }
 }
 
+void MainWindow::networkSceneViewNodeTypeDroppedAt(const QString &type, const QPoint &pos)
+{
+    std::string type_str = type.toStdString();
+    addNode(type_str, pos);
+}
+
 void MainWindow::nodeMoved(NodeItem *item)
 {
     scene_->update(scene_view_->sceneRect());
@@ -313,16 +368,26 @@ void MainWindow::addNodeClicked()
     foreach (QListWidgetItem* item, types_list_->selectedItems())
     {
         std::string type = item->text().toStdString();
+        addNode(type);
+    }
+}
 
-        const NodeProxy* node = app_->createNode(type);
+void MainWindow::addNode(const std::string &type, const QPoint &pos)
+{
+    const NodeProxy* node = app_->createNode(type);
 
-        if (node != nullptr)
-        {
-            NodeItem* node_item = new NodeItem(node);
-            scene_->addItem(node_item);
-            node_items_.insert(node->id(), node_item);
-            node_item->addDelegate(this);
-        }
+    if (node != nullptr)
+    {
+        NodeItem* node_item = new NodeItem(node);
+
+        QPointF scene_pos = scene_view_->mapToScene(pos);
+        QTransform transform;
+        transform.translate(scene_pos.x(),scene_pos.y());
+        node_item->setTransform(transform);
+
+        scene_->addItem(node_item);
+        node_items_.insert(node->id(), node_item);
+        node_item->addDelegate(this);
     }
 }
 

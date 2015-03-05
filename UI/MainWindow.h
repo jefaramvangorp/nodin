@@ -41,6 +41,7 @@ public:
     virtual void networkSceneViewPressedAt(const QPoint& pos);
     virtual void networkSceneViewReleasedAt(const QPoint& pos);
     virtual void networkSceneViewMoved(const QPoint& pos);
+    virtual void networkSceneViewNodeTypeDroppedAt(const QString& type, const QPoint& pos);
 
     // NodeItem::Delegate interface.
     virtual void nodeMoved(NodeItem* item);
@@ -59,6 +60,7 @@ private:
     bool selectInputIfUnderPos(const QPoint &pos);
     bool selectOutputIfUnderPos(const QPoint &pos);
     void addConnectionBetweenSelectedNodes();
+    void addNode(const std::string& type, const QPoint& pos = QPoint(0, 0));
 
     QListWidget* types_list_;
     NetworkSceneView* scene_view_;
