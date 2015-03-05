@@ -4,6 +4,7 @@
 // Includes.
 #include "NodeItem.h"
 #include "App/App.h"
+#include "App/Logger.h"
 #include "UI/NetworkSceneView.h"
 
 // STD.
@@ -19,8 +20,9 @@ class QGraphicsScene;
 class QGraphicsLineItem;
 class ConnectionItem;
 class QListWidget;
+class QTextEdit;
 
-class MainWindow : public QMainWindow, public App::UI, public App::Delegate, public NetworkSceneView::Delegate, public NodeItem::Delegate
+class MainWindow : public QMainWindow, public App::UI, public App::Delegate, public NetworkSceneView::Delegate, public NodeItem::Delegate, public Logger::Delegate
 {
     Q_OBJECT
 
@@ -48,6 +50,10 @@ public:
     // NodeItem::Delegate interface.
     virtual void nodeMoved(NodeItem* item);
 
+    // Logger::Delegate interface.
+    virtual void logMessage(const std::string &message);
+    virtual void logError(const std::string &message);
+
 private slots:
 
     void addNodeClicked();
@@ -66,6 +72,7 @@ private:
 
     QListWidget* types_list_;
     NetworkSceneView* scene_view_;
+    QTextEdit* log_view_;
 
     QGraphicsScene* scene_;
     App* app_;

@@ -21,6 +21,7 @@
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QTextEdit>
 #include <QListWidget>
 #include <QStringListModel>
 #include <QGraphicsLineItem>
@@ -141,6 +142,7 @@ MainWindow::MainWindow(App *app, QWidget *parent)
     : QMainWindow(parent)
     , types_list_(nullptr)
     , scene_view_(nullptr)
+    , log_view_(nullptr)
     , scene_(nullptr)
     , app_(app)
     , temp_line_item_(new QGraphicsLineItem)
@@ -189,13 +191,21 @@ MainWindow::MainWindow(App *app, QWidget *parent)
     central_layout->addWidget(types_list_);
     central_layout->addWidget(scene_view_);
 
+    log_view_ = new QTextEdit();
+    log_view_->setReadOnly(true);
+    log_view_->setMaximumHeight(200);
+    log_view_->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+
     QVBoxLayout* main_layout = new QVBoxLayout;
     main_layout->addLayout(toolbar_layout);
     main_layout->addLayout(central_layout);
+    main_layout->addWidget(log_view_);
 
     QWidget* central_widget = new QWidget;
     central_widget->setLayout(main_layout);
     setCentralWidget(central_widget);
+
+    Logger::instance().addDelegate(this);
 }
 
 MainWindow::~MainWindow()
@@ -205,6 +215,8 @@ MainWindow::~MainWindow()
     delete temp_line_item_;
     node_items_.clear();
     connection_items_.clear();
+
+    Logger::instance().removeDelegate(this);
 }
 
 std::string MainWindow::promptString(const std::string &message)
@@ -270,6 +282,18 @@ void MainWindow::connectionRemoved(ConnectionProxy connection)
     scene_->views().at(0)->repaint();
 
     delete item;
+}
+
+void MainWindow::logMessage(const std::string &message)
+{
+    log_view_->setTextColor(QColor(Qt::black));
+    log_view_->append(QString::fromStdString(message));
+}
+
+void MainWindow::logError(const std::string &message)
+{
+    log_view_->setTextColor(QColor(Qt::red));
+    log_view_->append(QString::fromStdString(message));
 }
 
 void MainWindow::networkSceneViewPressedAt(const QPoint &pos)
