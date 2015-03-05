@@ -45,7 +45,7 @@ void Logger::removeDelegate(Logger::Delegate *delegate)
 {
     if (delegate != nullptr)
     {
-        delegates_.push_back(delegate);
+        delegates_.erase(std::find(delegates_.begin(), delegates_.end(), delegate));
     }
 }
 
