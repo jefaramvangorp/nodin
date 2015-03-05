@@ -60,7 +60,7 @@ private:
     bool selectInputIfUnderPos(const QPoint &pos);
     bool selectOutputIfUnderPos(const QPoint &pos);
     void addConnectionBetweenSelectedNodes();
-    void addNode(const std::string& type, const QPoint& pos = QPoint(0, 0));
+    void addNode(const std::string& type, const QPoint& pos);
 
     QListWidget* types_list_;
     NetworkSceneView* scene_view_;

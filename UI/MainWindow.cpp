@@ -368,7 +368,7 @@ void MainWindow::addNodeClicked()
     foreach (QListWidgetItem* item, types_list_->selectedItems())
     {
         std::string type = item->text().toStdString();
-        addNode(type);
+        addNode(type, QPoint(0, 0));
     }
 }
 
