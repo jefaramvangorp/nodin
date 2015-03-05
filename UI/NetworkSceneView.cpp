@@ -4,6 +4,9 @@
 
 // Qt.
 #include <QMouseEvent>
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QMimeData>
 
 NetworkSceneView::NetworkSceneView(QGraphicsScene *scene, QWidget *parent)
     : QGraphicsView(scene, parent)
@@ -39,4 +42,33 @@ void NetworkSceneView::mouseMoveEvent(QMouseEvent *event)
     }
 
     QGraphicsView::mouseMoveEvent(event);
+}
+
+void NetworkSceneView::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasFormat("node/type"))
+    {
+        event->acceptProposedAction();
+    }
+}
+
+void NetworkSceneView::dragMoveEvent(QDragMoveEvent *event)
+{
+    if (event->mimeData()->hasFormat("node/type"))
+    {
+        event->acceptProposedAction();
+    }
+}
+
+void NetworkSceneView::dropEvent(QDropEvent *event)
+{
+    if (event->mimeData()->hasFormat("node/type"))
+    {
+        if (delegate_ != nullptr)
+        {
+            QString type(event->mimeData()->data("node/type"));
+            delegate_->networkSceneViewNodeTypeDroppedAt(type, event->pos());
+        }
+        event->acceptProposedAction();
+    }
 }
