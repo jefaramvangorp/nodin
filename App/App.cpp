@@ -43,7 +43,7 @@ bool App::addNodeFactory(NodeFactoryDelegate *delegate)
     }
 }
 
-const NodeProxy* App::createNode(const std::string &type)
+bool App::createNode(const std::string &type)
 {
     std::string id = QUuid::createUuid().toString().toStdString();
 
@@ -76,12 +76,13 @@ const NodeProxy* App::createNode(const std::string &type)
     if (node == nullptr)
     {
         ui_->displayError("Unsupported node type.");
-        return nullptr;
+        return false;
     }
     else
     {
         addNode(node);
-        return new NodeProxy(node);
+        ui_->nodeAdded(NodeProxy(node));
+        return true;
     }
 }
 
@@ -145,13 +146,16 @@ bool App::connectNodes(const std::string &outputNodeID, int outputIndex, const s
     if (!output_node->connectOutputTo(outputIndex, input_node, inputIndex))
     {
         fprintf(stderr, "%s\n", output_node->errorMessage().c_str());
+        return false;
     }
 
     if (!input_node->connectInputTo(inputIndex, output_node, outputIndex))
     {
         fprintf(stderr, "%s\n", input_node->errorMessage().c_str());
+        return false;
     }
 
+    ui_->connectionAdded(ConnectionProxy(outputNodeID, outputIndex, inputNodeID, inputIndex));
     return true;
 }
 

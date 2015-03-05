@@ -1,6 +1,10 @@
 #ifndef APP_APP_H_
 #define APP_APP_H_
 
+// Includes.
+#include "App/Boundary/NodeProxy.h"
+#include "App/Boundary/ConnectionProxy.h"
+
 // STD.
 #include <map>
 #include <vector>
@@ -8,10 +12,8 @@
 
 // Forward declarations.
 class Node;
-class NodeProxy;
 class NodeFactory;
 class NodeFactoryDelegate;
-class ConnectionProxy;
 
 class App
 {
@@ -21,11 +23,16 @@ public:
     {
     public:
         virtual ~UI() {}
+
+        // Required.
         virtual std::string promptString(const std::string& message) = 0;
         virtual bool promptBool(const std::string& message) = 0;
         virtual std::map<std::string, std::string> promptParameters(const std::vector<std::string>& parameters) = 0;
         virtual void displayError(const std::string& message) = 0;
 
+        // Optional.
+        virtual void nodeAdded(NodeProxy node) {}
+        virtual void connectionAdded(ConnectionProxy connection) {}
     };
 
     class Delegate
@@ -47,7 +54,7 @@ public:
 
     bool addNodeFactory(NodeFactoryDelegate* delegate); // Takes ownership of delegate!
     std::vector<std::string> availableNodeTypes() const { return available_node_types_; }
-    const NodeProxy* createNode(const std::string& type);
+    bool createNode(const std::string& type);
     bool connectNodes(const std::string& outputNodeID, int outputIndex,
                                    const std::string& inputNodeID, int inputIndex);
     void executeTerminalNodes() const;
