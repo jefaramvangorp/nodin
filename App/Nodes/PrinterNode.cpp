@@ -1,6 +1,6 @@
 
 // Includes.
-#include "PrinterNode.h"
+#include "App/Nodes/PrinterNode.h"
 
 // STD.
 #include <iostream>

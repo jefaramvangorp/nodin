@@ -1,6 +1,6 @@
 
 // Includes.
-#include "ConstantNode.h"
+#include "App/Nodes/ConstantNode.h"
 
 ConstantNode::ConstantNode(const std::string& id, const std::string& value)
     : Node(id, value, 0, 1)
