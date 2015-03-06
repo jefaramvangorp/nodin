@@ -25,13 +25,13 @@ SOURCES += main.cpp\
     App/Nodes/PrinterNode.cpp \
     App/Boundary/NodeProxy.cpp \
     App/Factories/NodeFactory.cpp \
-    App/Factories/AdditionNodeFactoryDelegate.cpp \
-    App/Factories/ConstantNodeFactoryDelegate.cpp \
-    App/Factories/PrinterNodeFactoryDelegate.cpp \
     UI/NetworkSceneView.cpp \
     App/Logger.cpp \
     App/Nodes/TextFileNode.cpp \
-    App/Factories/TextFileNFDelegate.cpp
+    App/Factories/TextFileNFDelegate.cpp \
+    App/Factories/ConstantNFDelegate.cpp \
+    App/Factories/AdditionNFDelegate.cpp \
+    App/Factories/PrinterNFDelegate.cpp
 
 HEADERS  += \
     UI/NodeItem.h \
@@ -45,11 +45,11 @@ HEADERS  += \
     App/Boundary/NodeProxy.h \
     App/Boundary/ConnectionProxy.h \
     App/Factories/NodeFactory.h \
-    App/Factories/ConstantNodeFactoryDelegate.h \
-    App/Factories/AdditionNodeFactoryDelegate.h \
-    App/Factories/PrinterNodeFactoryDelegate.h \
     App/Factories/NodeFactoryDelegate.h \
     UI/NetworkSceneView.h \
     App/Logger.h \
     App/Nodes/TextFileNode.h \
-    App/Factories/TextFileNFDelegate.h
+    App/Factories/TextFileNFDelegate.h \
+    App/Factories/AdditionNFDelegate.h \
+    App/Factories/ConstantNFDelegate.h \
+    App/Factories/PrinterNFDelegate.h
