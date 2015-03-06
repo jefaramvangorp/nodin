@@ -1,9 +1,9 @@
 
 // Includes
 #include "App/Nodes/AdditionNode.h"
+#include "App/BuiltInConnectorTypes.h"
 
 // STD.
-#include <iostream>
 #include <sstream>
 
 AdditionNode::AdditionNode(const std::string& id)
@@ -27,9 +27,8 @@ std::string AdditionNode::getInputType(int index) const
 {
     switch (index) {
     case 0:
-        return "float";
     case 1:
-        return "float";
+        return BuiltInConnectorTypes::FLOAT;
     default:
         return "";
     }
@@ -39,7 +38,7 @@ std::string AdditionNode::getOutputType(int index) const
 {
     switch (index) {
     case 0:
-        return "float";
+        return BuiltInConnectorTypes::FLOAT;
     default:
         return "";
     }

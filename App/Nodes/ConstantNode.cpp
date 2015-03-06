@@ -1,6 +1,7 @@
 
 // Includes.
 #include "App/Nodes/ConstantNode.h"
+#include "App/BuiltInConnectorTypes.h"
 
 ConstantNode::ConstantNode(const std::string& id, const std::string& value)
     : Node(id, value, 0, 1)
@@ -23,7 +24,7 @@ std::string ConstantNode::getOutputType(int index) const
 {
     switch (index) {
     case 0:
-        return "float";
+        return BuiltInConnectorTypes::FLOAT;
     default:
         return "";
     }

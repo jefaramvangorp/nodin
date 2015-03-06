@@ -1,6 +1,7 @@
 
 // Includes.
 #include "TextFileNode.h"
+#include "App/BuiltInConnectorTypes.h"
 
 // STD.
 #include <fstream>
@@ -53,7 +54,7 @@ std::string TextFileNode::getOutputType(int index) const
 {
     switch (index) {
     case 0:
-        return "lines_of_text";
+        return BuiltInConnectorTypes::TEXT_LINES;
     default:
         return "";
     }

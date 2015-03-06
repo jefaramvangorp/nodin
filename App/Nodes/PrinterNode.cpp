@@ -2,6 +2,7 @@
 // Includes.
 #include "App/Nodes/PrinterNode.h"
 #include "App/Logger.h"
+#include "App/BuiltInConnectorTypes.h"
 
 // STD.
 #include <iostream>
@@ -21,7 +22,7 @@ std::string PrinterNode::getInputType(int index) const
 {
     switch (index) {
     case 0:
-        return "any";
+        return BuiltInConnectorTypes::ANY;
     default:
         return "";
     }

@@ -3,12 +3,13 @@
 #include "App/App.h"
 #include "App/Logger.h"
 #include "App/Nodes/Node.h"
+#include "App/Nodes/PrinterNode.h"
 #include "App/Nodes/AdditionNode.h"
 #include "App/Nodes/ConstantNode.h"
-#include "App/Nodes/PrinterNode.h"
 #include "App/Boundary/NodeProxy.h"
-#include "App/Boundary/ConnectionProxy.h"
 #include "App/Factories/NodeFactory.h"
+#include "App/BuiltInConnectorTypes.h"
+#include "App/Boundary/ConnectionProxy.h"
 #include "App/Factories/NodeFactoryDelegate.h"
 
 // Qt. (TODO REMOVE THIS DEPENDENCY ON QT).
@@ -146,7 +147,7 @@ bool App::connectNodes(const std::string &outputNodeID, int outputIndex, const s
 
     std::string output_type = output_node->outputType(outputIndex);
     std::string input_type = input_node->inputType(inputIndex);
-    if ( input_type == "any" || output_type == input_type)
+    if ( input_type == BuiltInConnectorTypes::ANY || output_type == input_type)
     {
         if (!output_node->connectOutputTo(outputIndex, input_node, inputIndex))
         {
