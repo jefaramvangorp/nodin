@@ -6,6 +6,7 @@
 #include "App/Factories/AdditionNodeFactoryDelegate.h"
 #include "App/Factories/ConstantNodeFactoryDelegate.h"
 #include "App/Factories/PrinterNodeFactoryDelegate.h"
+#include "App/Factories/TextFileNFDelegate.h"
 
 // Qt.
 #include <QApplication>
@@ -25,6 +26,7 @@ int main(int argc, char *argv[])
     app.addNodeFactory(new AdditionNodeFactoryDelegate);
     app.addNodeFactory(new ConstantNodeFactoryDelegate);
     app.addNodeFactory(new PrinterNodeFactoryDelegate);
+    app.addNodeFactory(new TextFileNFDelegate);
 
     MainWindow w(&app);
     w.setWindowTitle(titleString());
