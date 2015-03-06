@@ -4,9 +4,10 @@
 
 // STD.
 #include <sstream>
+#include <assert.h>
 
 
-Node::Node(const std::string& id, const std::string &name, int numInputs, int numOutputs)
+Node::Node(const std::string &id, const std::string &name, int numInputs, int numOutputs)
     : id_(id)
     , name_(name)
     , num_inputs_(numInputs)
@@ -14,6 +15,9 @@ Node::Node(const std::string& id, const std::string &name, int numInputs, int nu
     , inputs_(new Connector*[num_inputs_])
     , outputs_(new Connector*[num_outputs_])
 {
+    // Can't have a node with no inputs and no outputs!
+    assert (num_inputs_ + num_outputs_ > 0);
+
     memset(inputs_, 0, num_inputs_ * sizeof(Connector*));
     memset(outputs_, 0, num_outputs_ * sizeof(Connector*));
 }
@@ -56,6 +60,16 @@ Connector *Node::outputConnector(int index) const
     {
         return 0;
     }
+}
+
+std::string Node::inputType(int index) const
+{
+    return getInputType(index);
+}
+
+std::string Node::outputType(int index) const
+{
+    return getOutputType(index);
 }
 
 void Node::setErrorMessage(const std::string &errorMessage)

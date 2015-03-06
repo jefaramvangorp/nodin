@@ -22,3 +22,25 @@ bool AdditionNode::computeValueAtOutput(const std::vector<std::string>& inputs, 
 
     return true;
 }
+
+std::string AdditionNode::getInputType(int index) const
+{
+    switch (index) {
+    case 0:
+        return "float";
+    case 1:
+        return "float";
+    default:
+        return "";
+    }
+}
+
+std::string AdditionNode::getOutputType(int index) const
+{
+    switch (index) {
+    case 0:
+        return "float";
+    default:
+        return "";
+    }
+}

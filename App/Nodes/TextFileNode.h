@@ -9,9 +9,12 @@ class TextFileNode : public Node
 public:
     TextFileNode(const std::string& id, const std::string &fileName);
 
-    virtual bool computeValueAtOutput(const std::vector<std::string>& inputs, int outputIndex, std::string *output);
 
 private:
+
+    virtual bool computeValueAtOutput(const std::vector<std::string>& inputs, int outputIndex, std::string *output);
+    virtual std::string getInputType(int index) const;
+    virtual std::string getOutputType(int index) const;
 
     std::string file_name_;
 };

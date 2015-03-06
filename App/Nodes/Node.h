@@ -31,6 +31,8 @@ public:
     bool isOutputConnected(int index) const { return outputConnector(index) != 0; }
     Connector* inputConnector(int index) const;
     Connector* outputConnector(int index) const;
+    std::string inputType(int index) const;
+    std::string outputType(int index) const;
 
     bool disconnectInput(int index);
     bool disconnectOutput(int index);
@@ -48,6 +50,8 @@ protected:
 private:
 
     virtual bool computeValueAtOutput(const std::vector<std::string>& inputs, int outputIndex, std::string *output) = 0;
+    virtual std::string getInputType(int index) const = 0;
+    virtual std::string getOutputType(int index) const = 0;
 
     bool retrieveInputs(std::vector<std::string>* inputs);
 

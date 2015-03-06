@@ -43,3 +43,18 @@ bool TextFileNode::computeValueAtOutput(const std::vector<std::string> &inputs, 
         return false;
     }
 }
+
+std::string TextFileNode::getInputType(int index) const
+{
+    return "";
+}
+
+std::string TextFileNode::getOutputType(int index) const
+{
+    switch (index) {
+    case 0:
+        return "lines_of_text";
+    default:
+        return "";
+    }
+}
