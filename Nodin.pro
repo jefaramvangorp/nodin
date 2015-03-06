@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     App/Factories/TextFileNFDelegate.cpp \
     App/Factories/ConstantNFDelegate.cpp \
     App/Factories/AdditionNFDelegate.cpp \
-    App/Factories/PrinterNFDelegate.cpp
+    App/Factories/PrinterNFDelegate.cpp \
+    App/BuiltInConnectorTypes.cpp
 
 HEADERS  += \
     UI/NodeItem.h \
@@ -52,4 +53,5 @@ HEADERS  += \
     App/Factories/TextFileNFDelegate.h \
     App/Factories/AdditionNFDelegate.h \
     App/Factories/ConstantNFDelegate.h \
-    App/Factories/PrinterNFDelegate.h
+    App/Factories/PrinterNFDelegate.h \
+    App/BuiltInConnectorTypes.h
