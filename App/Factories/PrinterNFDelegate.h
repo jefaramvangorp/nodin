@@ -1,14 +1,14 @@
-#ifndef APP_FACTORIES_PRINTERNODEFACTORYDELEGATE_H_
-#define APP_FACTORIES_PRINTERNODEFACTORYDELEGATE_H_
+#ifndef APP_FACTORIES_PRINTERNFDELEGATE_H_
+#define APP_FACTORIES_PRINTERNFDELEGATE_H_
 
 // Includes.
 #include "App/Factories/NodeFactoryDelegate.h"
 
-class PrinterNodeFactoryDelegate : public NodeFactoryDelegate
+class PrinterNFDelegate : public NodeFactoryDelegate
 {
 public:
-    PrinterNodeFactoryDelegate();
-    virtual ~PrinterNodeFactoryDelegate();
+    PrinterNFDelegate();
+    virtual ~PrinterNFDelegate();
 
     virtual std::string nodeType() const;
     virtual std::vector<std::string> requiredParameters();
@@ -16,4 +16,4 @@ public:
     virtual Node* createNode(const std::string& id, const std::map<std::string, std::string>& parameters);
 };
 
-#endif // APP_FACTORIES_PRINTERNODEFACTORYDELEGATE_H_
+#endif // APP_FACTORIES_PRINTERNFDELEGATE_H_

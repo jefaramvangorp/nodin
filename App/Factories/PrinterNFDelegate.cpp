@@ -1,33 +1,33 @@
 
 // Includes.
-#include "App/Factories/PrinterNodeFactoryDelegate.h"
+#include "App/Factories/PrinterNFDelegate.h"
 #include "App/Nodes/PrinterNode.h"
 
-PrinterNodeFactoryDelegate::PrinterNodeFactoryDelegate()
+PrinterNFDelegate::PrinterNFDelegate()
 {
 }
 
-PrinterNodeFactoryDelegate::~PrinterNodeFactoryDelegate()
+PrinterNFDelegate::~PrinterNFDelegate()
 {
 
 }
 
-std::string PrinterNodeFactoryDelegate::nodeType() const
+std::string PrinterNFDelegate::nodeType() const
 {
     return "Printer";
 }
 
-std::vector<std::string> PrinterNodeFactoryDelegate::requiredParameters()
+std::vector<std::string> PrinterNFDelegate::requiredParameters()
 {
     return std::vector<std::string>();
 }
 
-bool PrinterNodeFactoryDelegate::isValidParameter(const std::string &parameter, const std::string &value) const
+bool PrinterNFDelegate::isValidParameter(const std::string &parameter, const std::string &value) const
 {
     return true;
 }
 
-Node *PrinterNodeFactoryDelegate::createNode(const std::string &id, const std::map<std::string, std::string> &parameters)
+Node *PrinterNFDelegate::createNode(const std::string &id, const std::map<std::string, std::string> &parameters)
 {
     return new PrinterNode(id);
 }

@@ -3,9 +3,9 @@
 #include "UI/mainwindow.h"
 #include "App/App.h"
 
-#include "App/Factories/AdditionNodeFactoryDelegate.h"
-#include "App/Factories/ConstantNodeFactoryDelegate.h"
-#include "App/Factories/PrinterNodeFactoryDelegate.h"
+#include "App/Factories/AdditionNFDelegate.h"
+#include "App/Factories/ConstantNFDelegate.h"
+#include "App/Factories/PrinterNFDelegate.h"
 #include "App/Factories/TextFileNFDelegate.h"
 
 // Qt.
@@ -23,9 +23,9 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     App app;
-    app.addNodeFactory(new AdditionNodeFactoryDelegate);
-    app.addNodeFactory(new ConstantNodeFactoryDelegate);
-    app.addNodeFactory(new PrinterNodeFactoryDelegate);
+    app.addNodeFactory(new AdditionNFDelegate);
+    app.addNodeFactory(new ConstantNFDelegate);
+    app.addNodeFactory(new PrinterNFDelegate);
     app.addNodeFactory(new TextFileNFDelegate);
 
     MainWindow w(&app);

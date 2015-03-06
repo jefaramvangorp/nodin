@@ -1,30 +1,30 @@
 
 // Includes
-#include "App/Factories/ConstantNodeFactoryDelegate.h"
+#include "App/Factories/ConstantNFDelegate.h"
 #include "App/Nodes/ConstantNode.h"
 
-ConstantNodeFactoryDelegate::ConstantNodeFactoryDelegate()
+ConstantNFDelegate::ConstantNFDelegate()
 {
 }
 
-ConstantNodeFactoryDelegate::~ConstantNodeFactoryDelegate()
+ConstantNFDelegate::~ConstantNFDelegate()
 {
 
 }
 
-std::string ConstantNodeFactoryDelegate::nodeType() const
+std::string ConstantNFDelegate::nodeType() const
 {
     return "Constant";
 }
 
-std::vector<std::string> ConstantNodeFactoryDelegate::requiredParameters()
+std::vector<std::string> ConstantNFDelegate::requiredParameters()
 {
     std::vector<std::string> result;
     result.push_back("value");
     return result;
 }
 
-bool ConstantNodeFactoryDelegate::isValidParameter(const std::string &parameter, const std::string &value) const
+bool ConstantNFDelegate::isValidParameter(const std::string &parameter, const std::string &value) const
 {
     if (parameter == "value")
     {
@@ -44,7 +44,7 @@ bool ConstantNodeFactoryDelegate::isValidParameter(const std::string &parameter,
     }
 }
 
-Node *ConstantNodeFactoryDelegate::createNode(const std::string &id, const std::map<std::string, std::string> &parameters)
+Node *ConstantNFDelegate::createNode(const std::string &id, const std::map<std::string, std::string> &parameters)
 {
     return new ConstantNode(id, parameters.at("value"));
 }
