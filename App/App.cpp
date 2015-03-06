@@ -144,20 +144,31 @@ bool App::connectNodes(const std::string &outputNodeID, int outputIndex, const s
         }
     }
 
-    if (!output_node->connectOutputTo(outputIndex, input_node, inputIndex))
+    std::string output_type = output_node->outputType(outputIndex);
+    std::string input_type = input_node->inputType(inputIndex);
+    if ( input_type == "any" || output_type == input_type)
     {
-        Logger::instance().logError(output_node->errorMessage());
+        if (!output_node->connectOutputTo(outputIndex, input_node, inputIndex))
+        {
+            Logger::instance().logError(output_node->errorMessage());
+            return false;
+        }
+
+        if (!input_node->connectInputTo(inputIndex, output_node, outputIndex))
+        {
+            Logger::instance().logError(input_node->errorMessage());
+            return false;
+        }
+
+        ui_->connectionAdded(ConnectionProxy(outputNodeID, outputIndex, inputNodeID, inputIndex));
+        return true;
+    }
+    else
+    {
+        Logger::instance().logError("Input and output type do not match");
         return false;
     }
 
-    if (!input_node->connectInputTo(inputIndex, output_node, outputIndex))
-    {
-        Logger::instance().logError(input_node->errorMessage());
-        return false;
-    }
-
-    ui_->connectionAdded(ConnectionProxy(outputNodeID, outputIndex, inputNodeID, inputIndex));
-    return true;
 }
 
 void App::executeTerminalNodes() const
