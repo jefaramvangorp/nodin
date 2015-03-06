@@ -32,6 +32,13 @@ bool TextFileNFDelegate::isValidParameter(const std::string &parameter, const st
 {
     if (parameter == "fileName")
     {
+        std::string extension = value.substr(value.size()-4);
+        if (extension != ".txt")
+        {
+            Logger::instance().logError("Invalid parameter: incorrect extension, should be '.txt'.");
+            return false;
+        }
+
         std::ifstream file(value.c_str());
         if (file.is_open())
         {
@@ -41,12 +48,13 @@ bool TextFileNFDelegate::isValidParameter(const std::string &parameter, const st
         else
         {
             file.close();
-            Logger::instance().logError("File with given file name cannot be opened.");
+            Logger::instance().logError("Invalid parameter: file with given file name cannot be opened.");
             return false;
         }
     }
     else
     {
+        Logger::instance().logError("Invalid parameter: parameter not supported for text file node.");
         return false;
     }
 }
