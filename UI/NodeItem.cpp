@@ -17,6 +17,7 @@ namespace
     // Constants.
     const int OUTER_MARGIN = 10; // Margin between bounding rect and node box.
     const int INNER_MARGIN = 10; // Margin between node box and text rect.
+    const int SPACING = 20; // Space between node title and input and output type texts.
 }
 
 NodeItem::NodeItem(const NodeProxy &node)
@@ -32,27 +33,6 @@ NodeItem::NodeItem(const NodeProxy &node)
 NodeItem::~NodeItem()
 {
 
-}
-
-QRectF NodeItem::boundingRect() const
-{
-    int max_connections = qMax(node_.numInputs(), node_.numOutputs());
-    qreal height = max_connections * OUTER_MARGIN + (max_connections-1) * OUTER_MARGIN + 4 * OUTER_MARGIN;
-
-    QFontMetrics metrics(font());
-    qreal width = metrics.width(QString::fromStdString(node_.name())) + 2 * INNER_MARGIN + 4 * OUTER_MARGIN;
-
-    return QRectF(-width / 2, -height / 2, width, height);
-}
-
-void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    painter->setRenderHint(QPainter::Antialiasing, true);
-
-    drawNodeBox(painter);
-    drawText(painter);
-    drawInputs(painter);
-    drawOutputs(painter);
 }
 
 const std::string &NodeItem::nodeID() const
@@ -140,6 +120,18 @@ void NodeItem::setHighlightOutput(int index)
     update(boundingRect());
 }
 
+void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    painter->setRenderHint(QPainter::Antialiasing, true);
+
+    drawNodeBox(painter);
+    drawText(painter);
+    drawInputs(painter);
+    drawOutputs(painter);
+    drawInputNames(painter);
+    drawOutputNames(painter);
+}
+
 void NodeItem::drawNodeBox(QPainter *painter) const
 {
     QPainterPath path;
@@ -174,6 +166,49 @@ void NodeItem::drawOutputs(QPainter *painter) const
     }
 }
 
+void NodeItem::drawInputNames(QPainter* painter) const
+{
+    QFont original_font = painter->font();
+    QFont font(painter->font());
+    font.setItalic(true);
+    painter->setFont(font);
+
+    QPen original_pen = painter->pen();
+    painter->setPen(QPen(QColor(Qt::lightGray)));
+
+    for (int i = 0; i < node_.numInputs(); ++i)
+    {
+        qreal x = textRect().left();
+        qreal y = pathForInput(i).boundingRect().bottom();
+        painter->drawText(x, y, QString::fromStdString((node_.inputName(i))));
+    }
+
+    painter->setFont(original_font);
+    painter->setPen(original_pen);
+}
+
+void NodeItem::drawOutputNames(QPainter *painter) const
+{
+    QFont original_font = painter->font();
+    QFont font(painter->font());
+    font.setItalic(true);
+    painter->setFont(font);
+
+    QPen original_pen = painter->pen();
+    painter->setPen(QPen(QColor(Qt::lightGray)));
+
+    for (int i = 0; i < node_.numOutputs(); ++i)
+    {
+        QString name = QString::fromStdString((node_.outputName(i)));
+        qreal x = textRect().right() - painter->fontMetrics().width(name);
+        qreal y = pathForOutput(i).boundingRect().bottom();
+        painter->drawText(x, y, name);
+    }
+
+    painter->setFont(original_font);
+    painter->setPen(original_pen);
+}
+
 QPainterPath NodeItem::pathForInput(int index) const
 {
     qreal start_y = -(node_.numInputs() * OUTER_MARGIN + (node_.numInputs()-1) * OUTER_MARGIN) / 2;
@@ -201,6 +236,34 @@ QPainterPath NodeItem::pathForOutput(int index) const
 QFont NodeItem::font() const
 {
     return QFont("Arial");
+}
+
+QRectF NodeItem::boundingRect() const
+{
+    int max_connections = qMax(node_.numInputs(), node_.numOutputs());
+    qreal height = max_connections * OUTER_MARGIN + (max_connections-1) * OUTER_MARGIN + 4 * OUTER_MARGIN;
+
+    QFontMetrics metrics(font());
+
+
+    qreal max_input_name_width = 0.0f;
+    for (int i = 0; i < node_.numInputs(); ++i)
+    {
+        qreal input_name_width = metrics.width(QString::fromStdString(node_.inputName(i)));
+        max_input_name_width = qMax(max_input_name_width, input_name_width);
+    }
+
+    qreal max_output_name_width = 0.0f;
+    for (int i = 0; i < node_.numOutputs(); ++i)
+    {
+        qreal output_name_width = metrics.width(QString::fromStdString(node_.outputName(i)));
+        max_output_name_width = qMax(max_output_name_width, output_name_width);
+    }
+
+    qreal name_width = metrics.width(QString::fromStdString(node_.name()));
+    qreal width = name_width + max_input_name_width + max_output_name_width + 2 * SPACING + 2 * INNER_MARGIN + 4 * OUTER_MARGIN;
+
+    return QRectF(-width / 2, -height / 2, width, height);
 }
 
 QRectF NodeItem::nodeBoxRect() const

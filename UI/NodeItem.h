@@ -50,6 +50,8 @@ private:
     void drawText(QPainter* painter) const;
     void drawInputs(QPainter* painter) const;
     void drawOutputs(QPainter* painter) const;
+    void drawInputNames(QPainter *painter) const;
+    void drawOutputNames(QPainter *painter) const;
 
     QPainterPath pathForInput(int index) const;
     QPainterPath pathForOutput(int index) const;
