@@ -37,3 +37,8 @@ std::string NodeProxy::outputName(int index) const
 {
     return node_->outputType(index);
 }
+
+bool NodeProxy::isTerminal() const
+{
+    return node_->isTerminal();
+}

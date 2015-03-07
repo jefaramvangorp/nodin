@@ -18,6 +18,7 @@ public:
     int numOutputs() const;
     std::string inputName(int index) const;
     std::string outputName(int index) const;
+    bool isTerminal() const;
 
 private:
     const Node* node_;
