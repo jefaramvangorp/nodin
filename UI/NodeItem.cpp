@@ -20,10 +20,11 @@ namespace
     const int SPACING = 20; // Space between node title and input and output type texts.
 }
 
-NodeItem::NodeItem(const NodeProxy &node)
+NodeItem::NodeItem(const NodeProxy &node, bool showIONames)
     : node_(node)
     , selected_input_index_(-1)
     , selected_output_index_(-1)
+    , show_io_names_(showIONames)
 {
     setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsFocusable, true);
@@ -120,6 +121,15 @@ void NodeItem::setHighlightOutput(int index)
     update(boundingRect());
 }
 
+void NodeItem::setShowIONames(bool show)
+{
+    if (show_io_names_ != show)
+    {
+        show_io_names_ = show;
+        prepareGeometryChange();
+    }
+}
+
 void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setRenderHint(QPainter::Antialiasing, true);
@@ -128,8 +138,12 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     drawText(painter);
     drawInputs(painter);
     drawOutputs(painter);
-    drawInputNames(painter);
-    drawOutputNames(painter);
+
+    if (show_io_names_)
+    {
+        drawInputNames(painter);
+        drawOutputNames(painter);
+    }
 }
 
 void NodeItem::drawNodeBox(QPainter *painter) const
@@ -260,7 +274,12 @@ QRectF NodeItem::textRect() const
 {
     QFontMetrics metrics(font());
     qreal name_width = metrics.width(QString::fromStdString(node_.name()));
-    qreal width = name_width + 2 * qMax(maxInputNameWidth(), maxOutputNameWidth()) + 4 * SPACING;
+    qreal width = name_width + 4 * SPACING;
+
+    if (show_io_names_)
+    {
+        width += 2 * qMax(maxInputNameWidth(), maxOutputNameWidth());
+    }
 
     int max_connections = qMax(node_.numInputs(), node_.numOutputs());
     qreal height = qMax(metrics.height() + SPACING,  max_connections * OUTER_MARGIN + (max_connections-1) * OUTER_MARGIN);

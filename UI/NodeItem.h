@@ -24,7 +24,7 @@ public:
         virtual void nodeMoved(NodeItem* item) {}
     };
 
-    NodeItem(const NodeProxy& node_);
+    NodeItem(const NodeProxy& node_, bool showIONames);
     virtual ~NodeItem();
 
     virtual QRectF boundingRect() const;
@@ -39,6 +39,7 @@ public:
     int indexOfOutputUnder(const QPointF& pos);
     void setHighlightInput(int index);
     void setHighlightOutput(int index);
+    void setShowIONames(bool show);
 
 protected:
 
@@ -66,6 +67,7 @@ private:
     std::vector<Delegate*> delegates_;
     int selected_input_index_;
     int selected_output_index_;
+    bool show_io_names_;
 };
 
 
