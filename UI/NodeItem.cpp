@@ -274,7 +274,7 @@ QRectF NodeItem::textRect() const
 {
     QFontMetrics metrics(font());
     qreal name_width = metrics.width(QString::fromStdString(node_.name()));
-    qreal width = name_width + 4 * SPACING;
+    qreal width = name_width + 2 * SPACING;
 
     if (show_io_names_)
     {
@@ -282,7 +282,7 @@ QRectF NodeItem::textRect() const
     }
 
     int max_connections = qMax(node_.numInputs(), node_.numOutputs());
-    qreal height = qMax(metrics.height() + SPACING,  max_connections * OUTER_MARGIN + (max_connections-1) * OUTER_MARGIN);
+    qreal height = qMax((int)(metrics.height() * 1.25f),  max_connections * OUTER_MARGIN + (max_connections-1) * OUTER_MARGIN);
 
     return QRectF(-width / 2, -height / 2, width, height);
 }
