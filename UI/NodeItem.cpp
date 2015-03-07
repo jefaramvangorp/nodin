@@ -240,48 +240,56 @@ QFont NodeItem::font() const
 
 QRectF NodeItem::boundingRect() const
 {
-    int max_connections = qMax(node_.numInputs(), node_.numOutputs());
-    qreal height = max_connections * OUTER_MARGIN + (max_connections-1) * OUTER_MARGIN + 4 * OUTER_MARGIN;
-
-    QFontMetrics metrics(font());
-
-
-    qreal max_input_name_width = 0.0f;
-    for (int i = 0; i < node_.numInputs(); ++i)
-    {
-        qreal input_name_width = metrics.width(QString::fromStdString(node_.inputName(i)));
-        max_input_name_width = qMax(max_input_name_width, input_name_width);
-    }
-
-    qreal max_output_name_width = 0.0f;
-    for (int i = 0; i < node_.numOutputs(); ++i)
-    {
-        qreal output_name_width = metrics.width(QString::fromStdString(node_.outputName(i)));
-        max_output_name_width = qMax(max_output_name_width, output_name_width);
-    }
-
-    qreal name_width = metrics.width(QString::fromStdString(node_.name()));
-    qreal width = name_width + max_input_name_width + max_output_name_width + 2 * SPACING + 2 * INNER_MARGIN + 4 * OUTER_MARGIN;
-
-    return QRectF(-width / 2, -height / 2, width, height);
+    QRectF node_box = nodeBoxRect();
+    return QRectF(node_box.left() - OUTER_MARGIN,
+                  node_box.top() - OUTER_MARGIN,
+                  node_box.width() + 2 * OUTER_MARGIN,
+                  node_box.height() + 2 * OUTER_MARGIN);
 }
 
 QRectF NodeItem::nodeBoxRect() const
 {
-    QRectF bounding_rect = boundingRect();
-    return QRectF(bounding_rect.left() + OUTER_MARGIN,
-                  bounding_rect.top() + OUTER_MARGIN,
-                  bounding_rect.width() - 2 * OUTER_MARGIN,
-                  bounding_rect.height() - 2 * OUTER_MARGIN);
+    QRectF text_rect = textRect();
+    return QRectF(text_rect.left() - INNER_MARGIN,
+                  text_rect.top() - INNER_MARGIN,
+                  text_rect.width() + 2 * INNER_MARGIN,
+                  text_rect.height() + 2 * INNER_MARGIN);
 }
 
 QRectF NodeItem::textRect() const
 {
-    QRectF node_box_rect = nodeBoxRect();
-    return QRectF(node_box_rect.left() + INNER_MARGIN,
-                  node_box_rect.top() + INNER_MARGIN,
-                  node_box_rect.width() - 2 * INNER_MARGIN,
-                  node_box_rect.height() - 2 * INNER_MARGIN);
+    QFontMetrics metrics(font());
+    qreal name_width = metrics.width(QString::fromStdString(node_.name()));
+    qreal width = name_width + 2 * qMax(maxInputNameWidth(), maxOutputNameWidth()) + 4 * SPACING;
+
+    int max_connections = qMax(node_.numInputs(), node_.numOutputs());
+    qreal height = qMax(metrics.height() + SPACING,  max_connections * OUTER_MARGIN + (max_connections-1) * OUTER_MARGIN);
+
+    return QRectF(-width / 2, -height / 2, width, height);
+}
+
+qreal NodeItem::maxInputNameWidth() const
+{
+    QFontMetrics metrics(font());
+    qreal result = 0.0f;
+    for (int i = 0; i < node_.numInputs(); ++i)
+    {
+        qreal input_name_width = metrics.width(QString::fromStdString(node_.inputName(i)));
+        result  = qMax(result, input_name_width);
+    }
+    return result ;
+}
+
+qreal NodeItem::maxOutputNameWidth() const
+{
+    QFontMetrics metrics(font());
+    qreal result = 0.0f;
+    for (int i = 0; i < node_.numOutputs(); ++i)
+    {
+        qreal output_name_width = metrics.width(QString::fromStdString(node_.outputName(i)));
+        result = qMax(result, output_name_width);
+    }
+    return result;
 }
 
 void NodeItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)

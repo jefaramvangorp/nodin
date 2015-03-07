@@ -55,6 +55,8 @@ private:
 
     QPainterPath pathForInput(int index) const;
     QPainterPath pathForOutput(int index) const;
+    qreal maxInputNameWidth() const;
+    qreal maxOutputNameWidth() const;
 
     QFont font() const;
     QRectF nodeBoxRect() const;
