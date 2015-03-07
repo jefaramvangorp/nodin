@@ -134,6 +134,15 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 {
     painter->setRenderHint(QPainter::Antialiasing, true);
 
+    if (node_.isTerminal())
+    {
+        painter->setPen(QPen(QColor(Qt::blue)));
+    }
+    else
+    {
+        painter->setPen(QPen(QColor(Qt::black)));
+    }
+
     drawNodeBox(painter);
     drawText(painter);
     drawInputs(painter);
