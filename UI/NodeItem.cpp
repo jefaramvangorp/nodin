@@ -144,6 +144,13 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         drawInputNames(painter);
         drawOutputNames(painter);
     }
+
+//    painter->setPen(QPen(QColor(Qt::red)));
+//    painter->drawRect(textRect());
+//    painter->setPen(QPen(QColor(Qt::green)));
+//    painter->drawRect(nodeBoxRect());
+//    painter->setPen(QPen(QColor(Qt::blue)));
+//    painter->drawRect(boundingRect());
 }
 
 void NodeItem::drawNodeBox(QPainter *painter) const
@@ -157,7 +164,21 @@ void NodeItem::drawNodeBox(QPainter *painter) const
 void NodeItem::drawText(QPainter *painter) const
 {
     painter->setFont(font());
-    painter->drawText(textRect(), Qt::AlignCenter, QString::fromStdString(node_.name()));
+    QFontMetrics metrics(font());
+    QString name = QString::fromStdString(node_.name());
+
+    qreal x = 0.0;
+    if (show_io_names_)
+    {
+        x = textRect().left() + maxInputNameWidth() + SPACING;
+    }
+    else
+    {
+        x = textRect().center().x() - 0.5 * metrics.width(name);
+    }
+
+    qreal y = textRect().center().y() + 0.35 * metrics.lineSpacing();
+    painter->drawText(x, y, name);
 }
 
 void NodeItem::drawInputs(QPainter *painter) const
@@ -274,11 +295,15 @@ QRectF NodeItem::textRect() const
 {
     QFontMetrics metrics(font());
     qreal name_width = metrics.width(QString::fromStdString(node_.name()));
-    qreal width = name_width + 2 * SPACING;
+    qreal width = name_width;
 
     if (show_io_names_)
     {
-        width += 2 * qMax(maxInputNameWidth(), maxOutputNameWidth());
+        width += 2 * SPACING + maxInputNameWidth() + maxOutputNameWidth();
+    }
+    else
+    {
+        width += SPACING;
     }
 
     int max_connections = qMax(node_.numInputs(), node_.numOutputs());
