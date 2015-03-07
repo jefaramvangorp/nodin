@@ -16,6 +16,8 @@ public:
     const std::string& name() const;
     int numInputs() const;
     int numOutputs() const;
+    std::string inputName(int index) const;
+    std::string outputName(int index) const;
 
 private:
     const Node* node_;

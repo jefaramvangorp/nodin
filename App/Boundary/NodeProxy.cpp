@@ -27,3 +27,13 @@ int NodeProxy::numOutputs() const
 {
     return node_->numOutputs();
 }
+
+std::string NodeProxy::inputName(int index) const
+{
+    return node_->inputType(index);
+}
+
+std::string NodeProxy::outputName(int index) const
+{
+    return node_->outputType(index);
+}
