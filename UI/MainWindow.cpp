@@ -28,6 +28,7 @@
 #include <QMouseEvent>
 #include <QDrag>
 #include <QMimeData>
+#include <QCheckBox>
 
 class ParametersDialog : public QDialog
 {
@@ -143,6 +144,7 @@ MainWindow::MainWindow(App *app, QWidget *parent)
     , types_list_(nullptr)
     , scene_view_(nullptr)
     , log_view_(nullptr)
+    , show_types_box_(nullptr)
     , scene_(nullptr)
     , app_(app)
     , temp_line_item_(new QGraphicsLineItem)
@@ -162,12 +164,16 @@ MainWindow::MainWindow(App *app, QWidget *parent)
     connect(clear_button, &QPushButton::clicked, this, &MainWindow::clearClicked);
     QPushButton* test_button = new QPushButton(tr("Test"));
     connect(test_button, &QPushButton::clicked, this, &MainWindow::testClicked);
+    show_types_box_ = new QCheckBox(tr("Show types"));
+    connect(show_types_box_, &QCheckBox::stateChanged, this, &MainWindow::showTypes);
+
 
     QHBoxLayout* toolbar_layout = new QHBoxLayout;
     toolbar_layout->addWidget(add_node_button);
     toolbar_layout->addWidget(execute_button);
     toolbar_layout->addWidget(clear_button);
     toolbar_layout->addWidget(test_button);
+    toolbar_layout->addWidget(show_types_box_);
     toolbar_layout->addStretch();
 
     scene_view_ = new NetworkSceneView(scene_);
@@ -419,7 +425,7 @@ void MainWindow::addNodeClicked()
 
 void MainWindow::addNode(const NodeProxy &node, const QPoint &pos)
 {
-    NodeItem* node_item = new NodeItem(node);
+    NodeItem* node_item = new NodeItem(node, show_types_box_->isChecked());
 
     QPointF scene_pos = scene_view_->mapToScene(pos);
     QTransform transform;
@@ -485,4 +491,13 @@ void MainWindow::clearClicked()
 void MainWindow::testClicked()
 {
     app_->addTestScenario();
+}
+
+void MainWindow::showTypes(int state)
+{
+    foreach (NodeItem* item, node_items_.values())
+    {
+        item->setShowIONames(state == Qt::Checked);
+    }
+    scene_->update(scene_view_->sceneRect());
 }

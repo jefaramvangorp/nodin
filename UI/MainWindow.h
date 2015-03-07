@@ -21,6 +21,7 @@ class QGraphicsLineItem;
 class ConnectionItem;
 class QListWidget;
 class QTextEdit;
+class QCheckBox;
 
 class MainWindow : public QMainWindow, public App::UI, public App::Delegate, public NetworkSceneView::Delegate, public NodeItem::Delegate, public Logger::Delegate
 {
@@ -60,6 +61,7 @@ private slots:
     void executeClicked();
     void clearClicked();
     void testClicked();
+    void showTypes(int state);
 
 private:
 
@@ -73,6 +75,7 @@ private:
     QListWidget* types_list_;
     NetworkSceneView* scene_view_;
     QTextEdit* log_view_;
+    QCheckBox* show_types_box_;
 
     QGraphicsScene* scene_;
     App* app_;
