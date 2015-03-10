@@ -72,8 +72,15 @@ std::string LuaNodeScript::evaluateAtOutput(const std::vector<std::string> &inpu
     return selene_->state()["evaluateForOutput"](inputs_as_string, outputIndex);
 }
 
-bool LuaNodeScript::isValid() const
+bool LuaNodeScript::isValid(const std::string& fileName)
 {
+    sel::State state;
+    if (!state.Load(fileName))
+    {
+        Logger::instance().logError(state.errorMessage());
+        return false;
+    }
+
     std::vector<std::string> required_vars;
     required_vars.push_back("name");
     required_vars.push_back("num_inputs");
@@ -87,7 +94,7 @@ bool LuaNodeScript::isValid() const
     for (size_t i = 0; i < required_vars.size(); ++i)
     {
         std::string var = required_vars[i];
-        if ( selene_->state().CheckNil(var) )
+        if ( state.CheckNil(var) )
         {
             std::ostringstream stream;
             stream << "\"" << var << "\" variable not found.";
