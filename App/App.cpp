@@ -11,6 +11,7 @@
 #include "App/BuiltInConnectorTypes.h"
 #include "App/Boundary/ConnectionProxy.h"
 #include "App/Factories/NodeFactoryDelegate.h"
+#include "App/Lua/LuaNodeScript.h"
 
 // Qt. (TODO REMOVE THIS DEPENDENCY ON QT).
 #include <QUuid>
@@ -209,6 +210,20 @@ bool App::clearAllNodes()
     return ok;
 }
 
+void App::createScriptNode(const std::string &fileName)
+{
+    LuaNodeScript script(fileName);
+    if (script.isValid())
+    {
+        // TODO
+        Logger::instance().logMessage("Loaded lua script.");
+    }
+    else
+    {
+        Logger::instance().logError("Lua script is invalid, it does not meet the requirements.");
+    }
+}
+
 void App::removeAllNodes()
 {
     std::map<std::string, Node*>::iterator nodes_iter;
@@ -218,18 +233,4 @@ void App::removeAllNodes()
     }
     nodes_.clear();
     terminal_nodes_.clear();
-}
-
-void App::addTestScenario()
-{
-    ConstantNode* node_1 = new ConstantNode("01", "1");
-    ConstantNode* node_2 = new ConstantNode("02", "2");
-    PrinterNode* printer = new PrinterNode("03");
-
-    addNode(node_1);
-    addNode(node_2);
-    addNode(printer);
-
-    connectNodes("01", 0, "03", 0);
-    connectNodes("02", 0, "03", 0);
 }

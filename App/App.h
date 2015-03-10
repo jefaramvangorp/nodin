@@ -59,9 +59,7 @@ public:
                                    const std::string& inputNodeID, int inputIndex);
     void executeTerminalNodes() const;
     bool clearAllNodes();
-
-    // For debugging purposes, do not use.
-    void addTestScenario();
+    void createScriptNode(const std::string& fileName);
 
 private:
 

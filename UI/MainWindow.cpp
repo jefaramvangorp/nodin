@@ -15,6 +15,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QInputDialog>
+#include <QFileDialog>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QTextEdit>
@@ -45,8 +46,8 @@ MainWindow::MainWindow(App *app, QWidget *parent)
     connect(execute_button, &QPushButton::clicked, this, &MainWindow::executeClicked);
     QPushButton* clear_button = new QPushButton(tr("Clear"));
     connect(clear_button, &QPushButton::clicked, this, &MainWindow::clearClicked);
-    QPushButton* test_button = new QPushButton(tr("Test"));
-    connect(test_button, &QPushButton::clicked, this, &MainWindow::testClicked);
+    QPushButton* create_script_node_button = new QPushButton(tr("Create Script Node"));
+    connect(create_script_node_button, &QPushButton::clicked, this, &MainWindow::createScriptNodeClicked);
     show_types_box_ = new QCheckBox(tr("Show types"));
     connect(show_types_box_, &QCheckBox::stateChanged, this, &MainWindow::showTypes);
 
@@ -55,7 +56,7 @@ MainWindow::MainWindow(App *app, QWidget *parent)
     toolbar_layout->addWidget(add_node_button);
     toolbar_layout->addWidget(execute_button);
     toolbar_layout->addWidget(clear_button);
-    toolbar_layout->addWidget(test_button);
+    toolbar_layout->addWidget(create_script_node_button);
     toolbar_layout->addWidget(show_types_box_);
     toolbar_layout->addStretch();
 
@@ -371,9 +372,14 @@ void MainWindow::clearClicked()
     }
 }
 
-void MainWindow::testClicked()
+void MainWindow::createScriptNodeClicked()
 {
-    app_->addTestScenario();
+    QString file_name = QFileDialog::getOpenFileName(this, tr("Choose script file"));
+    if (!file_name.isEmpty())
+    {
+        std::string file_name_std = file_name.toStdString();
+        app_->createScriptNode(file_name_std);
+    }
 }
 
 void MainWindow::showTypes(int state)
