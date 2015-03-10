@@ -24,9 +24,9 @@ function evaluateForOutput(inputs, outputIndex)
     return input[1] + input[2]
 end
 
-required_parameters = {"lua_script_filename"}
+required_parameters = {}
 function validateParameter(name, value)
-    return name == "lua_script_filename"
+    return true
 end
 
 
