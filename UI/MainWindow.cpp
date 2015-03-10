@@ -4,6 +4,7 @@
 #include "UI/NodeItem.h"
 #include "UI/ConnectionItem.h"
 #include "UI/ParametersDialog.h"
+#include "UI/TypesWidget.h"
 #include "App/App.h"
 #include "App/Boundary/NodeProxy.h"
 #include "App/Boundary/ConnectionProxy.h"
@@ -17,59 +18,9 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QTextEdit>
-#include <QListWidget>
 #include <QStringListModel>
 #include <QGraphicsLineItem>
-#include <QMouseEvent>
-#include <QDrag>
-#include <QMimeData>
 #include <QCheckBox>
-
-class TypesWidget : public QListWidget
-{
-public:
-    TypesWidget(QWidget* parent = nullptr) : QListWidget(parent) {}
-
-protected:
-
-    virtual void mousePressEvent(QMouseEvent* e)
-    {
-        QListWidget::mousePressEvent(e);
-        if (e->button() == Qt::LeftButton)
-        {
-            drag_start_position_ = e->pos();
-        }
-    }
-
-    virtual void mouseMoveEvent(QMouseEvent *e)
-    {
-        QListWidget::mouseMoveEvent(e);
-
-        if ((e->buttons() & Qt::LeftButton) == 0)
-        {
-            return;
-        }
-        else
-        {
-            QDrag *drag = new QDrag(this);
-            QMimeData *mimeData = new QMimeData;
-
-            QListWidgetItem* item = itemAt(e->pos());
-            if (item != nullptr)
-            {
-                QString text = item->text();
-                mimeData->setData("node/type", text.toUtf8());
-                drag->setMimeData(mimeData);
-                drag->exec(Qt::CopyAction | Qt::MoveAction);
-            }
-        }
-    }
-
-private:
-
-    QPoint drag_start_position_;
-
-};
 
 MainWindow::MainWindow(App *app, QWidget *parent)
     : QMainWindow(parent)
