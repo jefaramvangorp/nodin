@@ -1,10 +1,25 @@
-#ifndef LUA_H
-#define LUA_H
+#ifndef APP_LUA_LUA_H_
+#define APP_LUA_LUA_H_
+
+// LuaBridge.
+#include <LuaBridge.h>
+
+// Lua.
+extern "C" {
+#include "lua.h"
+}
 
 class Lua
 {
 public:
-    Lua();
-};
 
-#endif // LUA_H
+    static luabridge::lua_State* state();
+
+private:
+
+    Lua();
+    ~Lua();
+
+    luabridge::lua_State* lua_state_;
+};
+#endif // APP_LUA_LUA_H_
