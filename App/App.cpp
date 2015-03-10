@@ -17,6 +17,9 @@
 #include <QUuid>
 
 App::App()
+    : ui_(nullptr)
+    , delegate_(nullptr)
+
 {
 }
 
