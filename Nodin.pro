@@ -39,7 +39,8 @@ SOURCES += main.cpp\
     App/BuiltInConnectorTypes.cpp \
     App/Lua/Lua.cpp \
     App/Lua/LuaNodeScript.cpp \
-    UI/ParametersDialog.cpp
+    UI/ParametersDialog.cpp \
+    UI/TypesWidget.cpp
 
 HEADERS  += \
     UI/NodeItem.h \
@@ -64,6 +65,7 @@ HEADERS  += \
     App/BuiltInConnectorTypes.h \
     App/Lua/Lua.h \
     App/Lua/LuaNodeScript.h \
-    UI/ParametersDialog.h
+    UI/ParametersDialog.h \
+    UI/TypesWidget.h
 
 OTHER_FILES += ./Scripts/Lua/node.lua
