@@ -38,7 +38,8 @@ SOURCES += main.cpp\
     App/Factories/PrinterNFDelegate.cpp \
     App/BuiltInConnectorTypes.cpp \
     App/Lua/Lua.cpp \
-    App/Lua/LuaNodeScript.cpp
+    App/Lua/LuaNodeScript.cpp \
+    UI/ParametersDialog.cpp
 
 HEADERS  += \
     UI/NodeItem.h \
@@ -62,6 +63,7 @@ HEADERS  += \
     App/Factories/PrinterNFDelegate.h \
     App/BuiltInConnectorTypes.h \
     App/Lua/Lua.h \
-    App/Lua/LuaNodeScript.h
+    App/Lua/LuaNodeScript.h \
+    UI/ParametersDialog.h
 
 OTHER_FILES += ./Scripts/Lua/node.lua
