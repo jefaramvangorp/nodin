@@ -221,7 +221,7 @@ bool App::clearAllNodes()
     return ok;
 }
 
-void App::createScriptNode(const std::string &fileName)
+void App::loadScriptNode(const std::string &fileName)
 {
     if (LuaNodeScript::isValid(fileName))
     {

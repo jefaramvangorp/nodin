@@ -60,7 +60,7 @@ public:
                                    const std::string& inputNodeID, int inputIndex);
     void executeTerminalNodes() const;
     bool clearAllNodes();
-    void createScriptNode(const std::string& fileName);
+    void loadScriptNode(const std::string& fileName);
 
 private:
 
