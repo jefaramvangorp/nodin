@@ -8,6 +8,7 @@
 #include "App/Nodes/ConstantNode.h"
 #include "App/Boundary/NodeProxy.h"
 #include "App/Factories/NodeFactory.h"
+#include "App/Factories/LuaNFDelegate.h"
 #include "App/BuiltInConnectorTypes.h"
 #include "App/Boundary/ConnectionProxy.h"
 #include "App/Factories/NodeFactoryDelegate.h"
@@ -41,6 +42,13 @@ bool App::addNodeFactory(NodeFactoryDelegate *delegate)
     {
         node_factories_.push_back(new NodeFactory(delegate));
         available_node_types_.push_back(delegate->nodeType());
+
+        if (delegate_ != nullptr)
+        {
+            delegate_->nodeTypeAdded(delegate->nodeType());
+        }
+
+        return true;
     }
     else
     {
@@ -218,8 +226,7 @@ void App::createScriptNode(const std::string &fileName)
     LuaNodeScript script(fileName);
     if (script.isValid())
     {
-        // TODO
-        Logger::instance().logMessage("Loaded lua script.");
+        addNodeFactory(new LuaNFDelegate(fileName));
     }
     else
     {
