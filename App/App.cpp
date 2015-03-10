@@ -223,14 +223,13 @@ bool App::clearAllNodes()
 
 void App::createScriptNode(const std::string &fileName)
 {
-    LuaNodeScript script(fileName);
-    if (script.isValid())
+    if (LuaNodeScript::isValid(fileName))
     {
         addNodeFactory(new LuaNFDelegate(fileName));
     }
     else
     {
-        Logger::instance().logError("Lua script is invalid, it does not meet the requirements.");
+        Logger::instance().logError("Unable to load script, it is invalid.");
     }
 }
 
