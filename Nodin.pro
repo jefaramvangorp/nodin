@@ -13,6 +13,10 @@ TARGET = Nodin
 TEMPLATE = app
 
 INCLUDEPATH += .
+INCLUDEPATH += ./External/lua-5.2.3/include
+INCLUDEPATH += ./External/LuaBridge
+
+LIBS += -L/Users/jefaramvangorp/Developer/C++/Nodin/Nodin/External/lua-5.2.3 -llua52
 
 SOURCES += main.cpp\
     UI/NodeItem.cpp \
@@ -32,7 +36,9 @@ SOURCES += main.cpp\
     App/Factories/ConstantNFDelegate.cpp \
     App/Factories/AdditionNFDelegate.cpp \
     App/Factories/PrinterNFDelegate.cpp \
-    App/BuiltInConnectorTypes.cpp
+    App/BuiltInConnectorTypes.cpp \
+    App/Lua/Lua.cpp \
+    App/Lua/LuaNodeScript.cpp
 
 HEADERS  += \
     UI/NodeItem.h \
@@ -54,4 +60,8 @@ HEADERS  += \
     App/Factories/AdditionNFDelegate.h \
     App/Factories/ConstantNFDelegate.h \
     App/Factories/PrinterNFDelegate.h \
-    App/BuiltInConnectorTypes.h
+    App/BuiltInConnectorTypes.h \
+    App/Lua/Lua.h \
+    App/Lua/LuaNodeScript.h
+
+OTHER_FILES += ./Scripts/Lua/node.lua
