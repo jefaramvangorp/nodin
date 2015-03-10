@@ -70,4 +70,4 @@ HEADERS  += \
     App/Nodes/LuaNode.h \
     App/Factories/LuaNFDelegate.h
 
-OTHER_FILES += ./Scripts/Lua/node.lua
+OTHER_FILES += ./NodeScripts/Lua/add.lua
