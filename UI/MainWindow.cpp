@@ -161,6 +161,11 @@ void MainWindow::connectionAdded(ConnectionProxy connection)
     connection_items_.insert(connection_id, item);
 }
 
+void MainWindow::nodeTypeAdded(const std::string &type)
+{
+    types_list_->addItem(QString::fromStdString(type));
+}
+
 void MainWindow::connectionRemoved(ConnectionProxy connection)
 {
     QString connection_id = createConnectionID(connection.outputNodeID(), connection.outputIndex(),

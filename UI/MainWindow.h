@@ -40,6 +40,7 @@ public:
     virtual void connectionAdded(ConnectionProxy connection);
 
     // App::Delegate interface.
+    virtual void nodeTypeAdded(const std::string& type);
     virtual void connectionRemoved(ConnectionProxy connection);
 
     // NetworkSceneView::Delegate inteface.
