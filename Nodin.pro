@@ -14,7 +14,7 @@ TEMPLATE = app
 
 INCLUDEPATH += .
 INCLUDEPATH += ./External/lua-5.2.3/include
-INCLUDEPATH += ./External/LuaBridge
+INCLUDEPATH += ./External/Selene/include
 
 LIBS += -L/Users/jefaramvangorp/Developer/C++/Nodin/Nodin/External/lua-5.2.3 -llua52
 
@@ -37,7 +37,6 @@ SOURCES += main.cpp\
     App/Factories/AdditionNFDelegate.cpp \
     App/Factories/PrinterNFDelegate.cpp \
     App/BuiltInConnectorTypes.cpp \
-    App/Lua/Lua.cpp \
     App/Lua/LuaNodeScript.cpp \
     UI/ParametersDialog.cpp \
     UI/TypesWidget.cpp
@@ -63,7 +62,6 @@ HEADERS  += \
     App/Factories/ConstantNFDelegate.h \
     App/Factories/PrinterNFDelegate.h \
     App/BuiltInConnectorTypes.h \
-    App/Lua/Lua.h \
     App/Lua/LuaNodeScript.h \
     UI/ParametersDialog.h \
     UI/TypesWidget.h

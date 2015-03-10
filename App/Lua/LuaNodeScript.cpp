@@ -1,39 +1,75 @@
 
 // Includes.
 #include "App/Lua/LuaNodeScript.h"
-#include "App/Lua/Lua.h"
 #include "App/Logger.h"
+
+// Selene.
+#include <selene.h>
+
+// STD.
+#include <sstream>
+#include <iostream>
+
+class SeleneHelper
+{
+public:
+    SeleneHelper() {}
+    sel::State& state() { return state_; }
+private:
+    sel::State state_{true};
+};
 
 
 LuaNodeScript::LuaNodeScript(const std::string &fileName)
+    : selene_(new SeleneHelper)
 {
-    luaL_dofile(Lua::state(), fileName.c_str());
-    lua_pcall(Lua::state(), 0, 0, 0);
+    selene_->state().Load(fileName);
 }
 
-std::string LuaNodeScript::name() const { return getGlobal(Lua::state(), "name"); }
+LuaNodeScript::~LuaNodeScript()
+{
+    delete selene_;
+}
 
-int LuaNodeScript::numInputs() const { return getGlobal(Lua::state(), "num_inputs"); }
+std::string LuaNodeScript::name() const
+{
+    return selene_->state()["name"];
+}
 
-int LuaNodeScript::numOutputs() const { return getGlobal(Lua::state(), "num_outputs"); }
+int LuaNodeScript::numInputs() const
+{
+    return selene_->state()["num_inputs"];
+}
 
-std::vector<std::string> LuaNodeScript::inputTypes() const { return stringVectorFromLuaTable("input_types"); }
+int LuaNodeScript::numOutputs() const
+{
+    return selene_->state()["num_outputs"];
+}
 
-std::vector<std::string> LuaNodeScript::outputTypes() const { return stringVectorFromLuaTable("output_types"); }
+std::vector<std::string> LuaNodeScript::inputTypes() const
+{
+    return stringVectorFromLuaTable("input_types");
+}
 
-std::vector<std::string> LuaNodeScript::requiredParameters() const { return stringVectorFromLuaTable("required_parameters"); }
+std::vector<std::string> LuaNodeScript::outputTypes() const
+{
+    return stringVectorFromLuaTable("output_types");
+}
+
+std::vector<std::string> LuaNodeScript::requiredParameters() const
+{
+    return stringVectorFromLuaTable("required_parameters");
+}
 
 bool LuaNodeScript::validateParameter(const std::string &name, const std::string &value) const
 {
-    luabridge::LuaRef validate = getGlobal(Lua::state(), "validateParameter");
-    return validate(name.c_str(), value.c_str());
+    return selene_->state()["validateParameter"](name, value);
 }
 
 std::string LuaNodeScript::evaluateAtOutput(const std::vector<std::string> &inputs, int outputIndex) const
 {
     std::string inputs_as_string = join(inputs, ",");
-    luabridge::LuaRef evaluateForOutput = getGlobal(Lua::state(), "evaluateForOutput");
-    return evaluateForOutput(inputs_as_string, outputIndex);
+    return selene_->state()["evaluateForOutput"](inputs_as_string, outputIndex);
 }
 
 bool LuaNodeScript::isValid() const
@@ -50,8 +86,8 @@ bool LuaNodeScript::isValid() const
 
     for (size_t i = 0; i < required_vars.size(); ++i)
     {
-        std::string& var = required_vars[i];
-        if (getGlobal(Lua::state(), var.c_str()).isNil())
+        std::string var = required_vars[i];
+        if ( selene_->state().CheckNil(var) )
         {
             std::ostringstream stream;
             stream << "\"" << var << "\" variable not found.";
@@ -66,14 +102,18 @@ bool LuaNodeScript::isValid() const
 std::vector<std::string> LuaNodeScript::stringVectorFromLuaTable(const char *varName) const
 {
     std::vector<std::string> result;
-    luabridge::LuaRef lua_table = getGlobal(Lua::state(), varName);
+
+    sel::Selector table = selene_->state()[varName];
+
     int i = 1;
-    while (!lua_table[i].isNil())
+    std::string type = table[i];
+    while (!type.empty())
     {
-        std::string type = lua_table[i].cast<std::string>();
         result.push_back(type);
-        ++i;
+        std::string next_type = table[++i];
+        type = next_type;
     }
+
     return result;
 }
 

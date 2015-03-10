@@ -5,11 +5,15 @@
 #include <vector>
 #include <string>
 
+// Forward declarations.
+class SeleneHelper;
+
 class LuaNodeScript
 {
 public:
 
     LuaNodeScript(const std::string& fileName);
+    ~LuaNodeScript();
 
     bool isValid() const;
     std::string name() const;
@@ -25,6 +29,8 @@ private:
 
     std::vector<std::string> stringVectorFromLuaTable(const char* varName) const;
     std::string join(const std::vector<std::string>& list, const std::string& separator) const;
+
+    SeleneHelper* selene_;
 };
 
 
