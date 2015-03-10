@@ -1,10 +1,25 @@
-#ifndef TYPESWIDGET_H
-#define TYPESWIDGET_H
+#ifndef UI_TYPESWIDGET_H_
+#define UI_TYPESWIDGET_H_
 
-class TypesWidget
+// Qt.
+#include <QListWidget>
+#include <QPoint>
+
+class TypesWidget : public QListWidget
 {
 public:
-    TypesWidget();
+
+    TypesWidget(QWidget* parent = nullptr);
+
+protected:
+
+    virtual void mousePressEvent(QMouseEvent* e);
+    virtual void mouseMoveEvent(QMouseEvent *e);
+
+private:
+
+    QPoint drag_start_position_;
+
 };
 
-#endif // TYPESWIDGET_H
+#endif // UI_TYPESWIDGET_H_
