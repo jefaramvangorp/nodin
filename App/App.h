@@ -15,6 +15,7 @@ class Node;
 class NodeFactory;
 class NodeFactoryDelegate;
 class FileSystem;
+class LuaNodeScript;
 
 class App
 {
@@ -72,6 +73,7 @@ private:
     UI* ui_;
     Delegate* delegate_;
     FileSystem* file_system_;
+    std::map<std::string, LuaNodeScript*> scripts_;
     std::vector<NodeFactory*> node_factories_;
     std::vector<std::string> available_node_types_;
     std::map<std::string, Node*> nodes_;

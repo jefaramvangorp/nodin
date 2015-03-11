@@ -29,6 +29,13 @@ App::~App()
         delete (*factories_iter);
     }
     node_factories_.clear();
+
+    std::map<std::string, LuaNodeScript*>::iterator scripts_iter;
+    for (scripts_iter = scripts_.begin(); scripts_iter != scripts_.end(); ++scripts_iter)
+    {
+        delete (*scripts_iter).second;
+    }
+    scripts_.clear();
 }
 
 bool App::addNodeFactory(NodeFactoryDelegate *delegate)
@@ -220,7 +227,9 @@ void App::loadScriptNode(const std::string &fileName)
 {
     if (LuaNodeScript::isValid(fileName))
     {
-        addNodeFactory(new LuaNFDelegate(fileName));
+        LuaNodeScript* script = new LuaNodeScript(fileName);
+        scripts_[fileName] = script;
+        addNodeFactory(new LuaNFDelegate(script));
     }
     else
     {
