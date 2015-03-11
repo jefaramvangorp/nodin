@@ -41,7 +41,8 @@ SOURCES += main.cpp\
     UI/ParametersDialog.cpp \
     UI/TypesWidget.cpp \
     App/Nodes/LuaNode.cpp \
-    App/Factories/LuaNFDelegate.cpp
+    App/Factories/LuaNFDelegate.cpp \
+    System/QtBasedFileSystem.cpp
 
 HEADERS  += \
     UI/NodeItem.h \
@@ -68,7 +69,9 @@ HEADERS  += \
     UI/ParametersDialog.h \
     UI/TypesWidget.h \
     App/Nodes/LuaNode.h \
-    App/Factories/LuaNFDelegate.h
+    App/Factories/LuaNFDelegate.h \
+    App/FileSystem.h \
+    System/QtBasedFileSystem.h
 
 OTHER_FILES += ./NodeScripts/Lua/add.lua
 OTHER_FILES += ./NodeScripts/Lua/subtract.lua
