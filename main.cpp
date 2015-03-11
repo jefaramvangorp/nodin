@@ -8,6 +8,8 @@
 #include "App/Factories/PrinterNFDelegate.h"
 #include "App/Factories/TextFileNFDelegate.h"
 
+#include "System/QtBasedFileSystem.h"
+
 // Qt.
 #include <QApplication>
 
@@ -22,7 +24,9 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    App app;
+    QtBasedFileSystem file_system;
+
+    App app(&file_system);
     app.addNodeFactory(new AdditionNFDelegate);
     app.addNodeFactory(new ConstantNFDelegate);
     app.addNodeFactory(new PrinterNFDelegate);
