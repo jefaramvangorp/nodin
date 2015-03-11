@@ -29,7 +29,6 @@ public:
 private:
 
     std::vector<std::string> stringVectorFromLuaTable(const char* varName) const;
-    std::string join(const std::vector<std::string>& list, const std::string& separator) const;
 
     SeleneHelper* selene_;
 };

@@ -149,17 +149,3 @@ std::vector<std::string> LuaNodeScript::stringVectorFromLuaTable(const char *var
 
     return result;
 }
-
-std::string LuaNodeScript::join(const std::vector<std::string> &list, const std::string &separator) const
-{
-    std::ostringstream stream;
-    for (size_t i = 0; i < list.size(); ++i)
-    {
-        stream << list[i];
-        if (i < list.size() - 1)
-        {
-            stream << separator;
-        }
-    }
-    return stream.str();
-}
