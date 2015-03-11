@@ -71,7 +71,7 @@ bool App::createNode(const std::string &type)
             {
                 std::map<std::string, std::string> param_values = ui_->promptParameters(required_params);
 
-                for (int i = 0; i < required_params.size(); ++i)
+                for (size_t i = 0; i < required_params.size(); ++i)
                 {
                     std::string param = required_params[i];
                     factory->setParameterValue(param, param_values[param]);
