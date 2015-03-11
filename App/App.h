@@ -62,6 +62,7 @@ public:
     void executeTerminalNodes() const;
     bool clearAllNodes();
     void loadScriptNode(const std::string& fileName);
+    void loadScriptNodes(const std::string& directory);
 
 private:
 

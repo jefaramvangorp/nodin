@@ -231,6 +231,17 @@ void App::loadScriptNode(const std::string &fileName)
     }
 }
 
+void App::loadScriptNodes(const std::string &directory)
+{
+    std::vector<std::string> scripts = file_system_->listFilesInDir(directory, "lua");
+
+    std::vector<std::string>::const_iterator iter;
+    for (iter = scripts.begin(); iter != scripts.end(); ++iter)
+    {
+        loadScriptNode(*iter);
+    }
+}
+
 void App::removeAllNodes()
 {
     std::map<std::string, Node*>::iterator nodes_iter;
