@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
     app.addNodeFactory(new ConstantNFDelegate);
     app.addNodeFactory(new PrinterNFDelegate);
     app.addNodeFactory(new TextFileNFDelegate);
+    app.loadScriptNodes("Nodin/NodeScripts/Lua");
 
     MainWindow w(&app);
     w.setWindowTitle(titleString());
