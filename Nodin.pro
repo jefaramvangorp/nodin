@@ -71,3 +71,4 @@ HEADERS  += \
     App/Factories/LuaNFDelegate.h
 
 OTHER_FILES += ./NodeScripts/Lua/add.lua
+OTHER_FILES += ./NodeScripts/Lua/subtract.lua
