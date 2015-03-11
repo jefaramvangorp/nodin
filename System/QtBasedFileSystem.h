@@ -1,10 +1,16 @@
-#ifndef QTBASEDFILESYSTEM_H
-#define QTBASEDFILESYSTEM_H
+#ifndef SYSTEM_QTBASEDFILESYSTEM_H_
+#define SYSTEM_QTBASEDFILESYSTEM_H_
 
-class QtBasedFileSystem
+// Includes.
+#include "App/FileSystem.h"
+
+class QtBasedFileSystem : public FileSystem
 {
 public:
     QtBasedFileSystem();
+    virtual ~QtBasedFileSystem();
+
+    virtual std::string generateUUID() const;
 };
 
-#endif // QTBASEDFILESYSTEM_H
+#endif // SYSTEM_QTBASEDFILESYSTEM_H_
