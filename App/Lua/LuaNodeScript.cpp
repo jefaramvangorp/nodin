@@ -40,9 +40,10 @@ private:
 
 
 LuaNodeScript::LuaNodeScript(const std::string &fileName)
-    : selene_(new SeleneHelper)
+    : script_file_(fileName)
+    , selene_(new SeleneHelper)
 {
-    selene_->state().Load(fileName);
+    selene_->state().Load(script_file_);
 }
 
 LuaNodeScript::~LuaNodeScript()
@@ -96,6 +97,18 @@ std::string LuaNodeScript::evaluateAtOutput(const std::vector<std::string> &inpu
                                           "float", &InputList::getFloat);
 
     return selene_->state()["evaluateForOutput"](outputIndex);
+}
+
+bool LuaNodeScript::reload()
+{
+    bool ok = selene_->state().Load(script_file_);
+
+    if (!ok)
+    {
+        Logger::instance().logError(selene_->state().errorMessage());
+    }
+
+    return ok;
 }
 
 bool LuaNodeScript::isValid(const std::string& fileName)

@@ -24,12 +24,15 @@ public:
     bool validateParameter(const std::string& name, const std::string& value) const;
     std::string evaluateAtOutput(const std::vector<std::string>& inputs, int outputIndex) const;
 
+    bool reload();
+
     static bool isValid(const std::string &fileName);
 
 private:
 
     std::vector<std::string> stringVectorFromLuaTable(const char* varName) const;
 
+    std::string script_file_;
     SeleneHelper* selene_;
 };
 
