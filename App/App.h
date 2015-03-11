@@ -64,6 +64,7 @@ public:
     bool clearAllNodes();
     void loadScriptNode(const std::string& fileName);
     void loadScriptNodes(const std::string& directory);
+    void reloadScriptNode(const std::string& fileName);
 
 private:
 

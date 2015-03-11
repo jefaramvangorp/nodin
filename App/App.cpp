@@ -12,6 +12,25 @@
 #include "App/Factories/NodeFactoryDelegate.h"
 #include "App/Lua/LuaNodeScript.h"
 
+class ScriptFileMonitor : public FileMonitor
+{
+public:
+
+    ScriptFileMonitor(const std::string& fileName, App* app) : file_name_(fileName), app_(app) {}
+    virtual ~ScriptFileMonitor() {}
+
+    virtual void fileWasModified()
+    {
+        app_->reloadScriptNode(file_name_);
+    }
+
+private:
+
+    std::string file_name_;
+    App* app_;
+};
+
+
 App::App(FileSystem* fileSystem)
     : ui_(nullptr)
     , delegate_(nullptr)
@@ -229,6 +248,7 @@ void App::loadScriptNode(const std::string &fileName)
     {
         LuaNodeScript* script = new LuaNodeScript(fileName);
         scripts_[fileName] = script;
+        file_system_->registerFileMonitor(fileName, new ScriptFileMonitor(fileName, this));
         addNodeFactory(new LuaNFDelegate(script));
     }
     else
@@ -246,6 +266,11 @@ void App::loadScriptNodes(const std::string &directory)
     {
         loadScriptNode(*iter);
     }
+}
+
+void App::reloadScriptNode(const std::string &fileName)
+{
+    Logger::instance().logMessage(std::string("Reload file: ") + fileName );
 }
 
 void App::removeAllNodes()
