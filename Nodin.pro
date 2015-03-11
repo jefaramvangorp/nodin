@@ -24,7 +24,6 @@ SOURCES += main.cpp\
     App/App.cpp \
     UI/ConnectionItem.cpp \
     App/Nodes/Node.cpp \
-    App/Nodes/AdditionNode.cpp \
     App/Nodes/ConstantNode.cpp \
     App/Nodes/PrinterNode.cpp \
     App/Boundary/NodeProxy.cpp \
@@ -34,7 +33,6 @@ SOURCES += main.cpp\
     App/Nodes/TextFileNode.cpp \
     App/Factories/TextFileNFDelegate.cpp \
     App/Factories/ConstantNFDelegate.cpp \
-    App/Factories/AdditionNFDelegate.cpp \
     App/Factories/PrinterNFDelegate.cpp \
     App/BuiltInConnectorTypes.cpp \
     App/Lua/LuaNodeScript.cpp \
@@ -50,7 +48,6 @@ HEADERS  += \
     App/App.h \
     UI/ConnectionItem.h \
     App/Nodes/Node.h \
-    App/Nodes/AdditionNode.h \
     App/Nodes/ConstantNode.h \
     App/Nodes/PrinterNode.h \
     App/Boundary/NodeProxy.h \
@@ -61,7 +58,6 @@ HEADERS  += \
     App/Logger.h \
     App/Nodes/TextFileNode.h \
     App/Factories/TextFileNFDelegate.h \
-    App/Factories/AdditionNFDelegate.h \
     App/Factories/ConstantNFDelegate.h \
     App/Factories/PrinterNFDelegate.h \
     App/BuiltInConnectorTypes.h \
