@@ -3,12 +3,14 @@
 
 // Includes.
 #include "App/Factories/NodeFactoryDelegate.h"
-#include "App/Lua/LuaNodeScript.h"
+
+// Forward declarations.
+class LuaNodeScript;
 
 class LuaNFDelegate : public NodeFactoryDelegate
 {
 public:
-    LuaNFDelegate(const std::string& scriptFileName);
+    LuaNFDelegate(const LuaNodeScript* script);
     virtual ~LuaNFDelegate();
 
     virtual std::string nodeType() const;
@@ -18,7 +20,7 @@ public:
 
 private:
 
-    LuaNodeScript script_;
+    const LuaNodeScript* script_;
 };
 
 #endif // APP_FACTORIES_LUANFDELEGATE_H_
