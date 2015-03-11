@@ -14,6 +14,7 @@
 class Node;
 class NodeFactory;
 class NodeFactoryDelegate;
+class FileSystem;
 
 class App
 {
@@ -44,7 +45,7 @@ public:
     };
 
 
-    App();
+    App(FileSystem *fileSystem);
     ~App();
 
     static std::string appName() { return "Nodin"; }
@@ -69,6 +70,7 @@ private:
 
     UI* ui_;
     Delegate* delegate_;
+    FileSystem* file_system_;
     std::vector<NodeFactory*> node_factories_;
     std::vector<std::string> available_node_types_;
     std::map<std::string, Node*> nodes_;

@@ -2,6 +2,7 @@
 // Includes.
 #include "App/App.h"
 #include "App/Logger.h"
+#include "App/FileSystem.h"
 #include "App/Nodes/Node.h"
 #include "App/Nodes/PrinterNode.h"
 #include "App/Nodes/AdditionNode.h"
@@ -14,13 +15,10 @@
 #include "App/Factories/NodeFactoryDelegate.h"
 #include "App/Lua/LuaNodeScript.h"
 
-// Qt. (TODO REMOVE THIS DEPENDENCY ON QT).
-#include <QUuid>
-
-App::App()
+App::App(FileSystem* fileSystem)
     : ui_(nullptr)
     , delegate_(nullptr)
-
+    , file_system_(fileSystem)
 {
 }
 
@@ -59,7 +57,7 @@ bool App::addNodeFactory(NodeFactoryDelegate *delegate)
 
 bool App::createNode(const std::string &type)
 {
-    std::string id = QUuid::createUuid().toString().toStdString();
+    std::string id = file_system_->generateUUID();
 
     Node* node = nullptr;
 
