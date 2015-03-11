@@ -270,7 +270,11 @@ void App::loadScriptNodes(const std::string &directory)
 
 void App::reloadScriptNode(const std::string &fileName)
 {
-    Logger::instance().logMessage(std::string("Reload file: ") + fileName );
+    bool ok = scripts_[fileName]->reload();
+    if (!ok)
+    {
+        Logger::instance().logMessage(std::string("Unable to reload file: ") + fileName );
+    }
 }
 
 void App::removeAllNodes()
