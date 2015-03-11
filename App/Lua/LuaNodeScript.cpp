@@ -7,8 +7,27 @@
 #include <selene.h>
 
 // STD.
+#include <string>
 #include <sstream>
 #include <iostream>
+
+class InputList
+{
+public:
+    InputList() {}
+    InputList(const std::vector<std::string>& inputs)
+        : inputs_(inputs)
+    {
+
+    }
+
+    int count() { return (int)inputs_.size(); }
+    const std::string& getString(int i) { return inputs_.at(i); }
+    float getFloat(int i) { return std::stof(inputs_.at(i)); }
+
+private:
+    std::vector<std::string> inputs_;
+};
 
 class SeleneHelper
 {
@@ -68,8 +87,15 @@ bool LuaNodeScript::validateParameter(const std::string &name, const std::string
 
 std::string LuaNodeScript::evaluateAtOutput(const std::vector<std::string> &inputs, int outputIndex) const
 {
-    std::string inputs_as_string = join(inputs, ",");
-    return selene_->state()["evaluateForOutput"](inputs_as_string, outputIndex);
+    InputList list(inputs);
+
+    // Register the instance "list" instead of the class.
+    selene_->state()["ndn_inputs"].SetObj(list,
+                                          "count", &InputList::count,
+                                          "string", &InputList::getString,
+                                          "float", &InputList::getFloat);
+
+    return selene_->state()["evaluateForOutput"](outputIndex);
 }
 
 bool LuaNodeScript::isValid(const std::string& fileName)
