@@ -45,11 +45,6 @@ bool TextFileNode::computeValueAtOutput(const std::vector<std::string> &inputs, 
     }
 }
 
-std::string TextFileNode::getInputType(int index) const
-{
-    return "";
-}
-
 std::string TextFileNode::getOutputType(int index) const
 {
     switch (index) {

@@ -51,8 +51,8 @@ protected:
 private:
 
     virtual bool computeValueAtOutput(const std::vector<std::string>& inputs, int outputIndex, std::string *output) = 0;
-    virtual std::string getInputType(int index) const = 0;
-    virtual std::string getOutputType(int index) const = 0;
+    virtual std::string getInputType(int index) const { return std::string(); }
+    virtual std::string getOutputType(int index) const { return std::string(); }
 
     bool retrieveInputs(std::vector<std::string>* inputs);
 

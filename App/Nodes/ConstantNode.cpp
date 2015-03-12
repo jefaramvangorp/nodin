@@ -15,11 +15,6 @@ bool ConstantNode::computeValueAtOutput(const std::vector<std::string>& inputs, 
     return true;
 }
 
-std::string ConstantNode::getInputType(int index) const
-{
-    return "";
-}
-
 std::string ConstantNode::getOutputType(int index) const
 {
     switch (index) {

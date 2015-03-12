@@ -27,8 +27,3 @@ std::string PrinterNode::getInputType(int index) const
         return "";
     }
 }
-
-std::string PrinterNode::getOutputType(int index) const
-{
-    return "";
-}
