@@ -11,6 +11,19 @@
 #include <sstream>
 #include <iostream>
 
+namespace
+{
+    void logError(std::string message)
+    {
+        Logger::instance().logError(message);
+    }
+
+    void logMessage(std::string message)
+    {
+        Logger::instance().logMessage(message);
+    }
+}
+
 class InputList
 {
 public:
@@ -43,7 +56,7 @@ LuaNodeScript::LuaNodeScript(const std::string &fileName)
     : script_file_(fileName)
     , selene_(new SeleneHelper)
 {
-    selene_->state().Load(script_file_);
+    reload();
 }
 
 LuaNodeScript::~LuaNodeScript()
@@ -106,6 +119,11 @@ bool LuaNodeScript::reload()
     if (!ok)
     {
         Logger::instance().logError(selene_->state().errorMessage());
+    }
+    else
+    {
+        selene_->state()["ndnLogError"] = &logError;
+        selene_->state()["ndnLogMessage"] = &logMessage;
     }
 
     return ok;
