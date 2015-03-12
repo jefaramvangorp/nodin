@@ -5,6 +5,7 @@
 #include "UI/ConnectionItem.h"
 #include "UI/ParametersDialog.h"
 #include "UI/TypesWidget.h"
+#include "UI/ScriptEditorWindow.h"
 #include "App/App.h"
 #include "App/Boundary/NodeProxy.h"
 #include "App/Boundary/ConnectionProxy.h"
@@ -48,6 +49,8 @@ MainWindow::MainWindow(App *app, QWidget *parent)
     connect(clear_button, &QPushButton::clicked, this, &MainWindow::clearClicked);
     QPushButton* load_script_node_button = new QPushButton(tr("Load Script Node"));
     connect(load_script_node_button, &QPushButton::clicked, this, &MainWindow::loadScriptNodeClicked);
+    QPushButton* create_script_button = new QPushButton(tr("Create Script"));
+    connect(create_script_button, &QPushButton::clicked, this, &MainWindow::createScript);
     show_types_box_ = new QCheckBox(tr("Show types"));
     connect(show_types_box_, &QCheckBox::stateChanged, this, &MainWindow::showTypes);
 
@@ -57,6 +60,7 @@ MainWindow::MainWindow(App *app, QWidget *parent)
     toolbar_layout->addWidget(execute_button);
     toolbar_layout->addWidget(clear_button);
     toolbar_layout->addWidget(load_script_node_button);
+    toolbar_layout->addWidget(create_script_button);
     toolbar_layout->addWidget(show_types_box_);
     toolbar_layout->addStretch();
 
@@ -385,6 +389,12 @@ void MainWindow::loadScriptNodeClicked()
         std::string file_name_std = file_name.toStdString();
         app_->loadScriptNode(file_name_std);
     }
+}
+
+void MainWindow::createScript()
+{
+    ScriptEditorWindow* window = new ScriptEditorWindow(app_, this, Qt::Window);
+    window->show();
 }
 
 void MainWindow::showTypes(int state)

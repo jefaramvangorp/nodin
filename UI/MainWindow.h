@@ -62,6 +62,7 @@ private slots:
     void executeClicked();
     void clearClicked();
     void loadScriptNodeClicked();
+    void createScript();
     void showTypes(int state);
 
 private:
