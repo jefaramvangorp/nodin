@@ -40,7 +40,8 @@ SOURCES += main.cpp\
     UI/TypesWidget.cpp \
     App/Nodes/LuaNode.cpp \
     App/Factories/LuaNFDelegate.cpp \
-    System/QtBasedFileSystem.cpp
+    System/QtBasedFileSystem.cpp \
+    UI/ScriptEditorWindow.cpp
 
 HEADERS  += \
     UI/NodeItem.h \
@@ -67,7 +68,8 @@ HEADERS  += \
     App/Nodes/LuaNode.h \
     App/Factories/LuaNFDelegate.h \
     App/FileSystem.h \
-    System/QtBasedFileSystem.h
+    System/QtBasedFileSystem.h \
+    UI/ScriptEditorWindow.h
 
 OTHER_FILES += ./NodeScripts/Lua/add.lua
 OTHER_FILES += ./NodeScripts/Lua/subtract.lua
