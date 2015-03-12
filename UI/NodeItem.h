@@ -54,6 +54,7 @@ private:
     void drawInputNames(QPainter *painter) const;
     void drawOutputNames(QPainter *painter) const;
 
+    QColor nodeColor() const;
     QPainterPath pathForInput(int index) const;
     QPainterPath pathForOutput(int index) const;
     qreal maxInputNameWidth() const;

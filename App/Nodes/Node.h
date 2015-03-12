@@ -26,6 +26,7 @@ public:
     int numInputs() const { return num_inputs_; }
     int numOutputs() const { return num_outputs_; }
     const std::string& errorMessage() const { return error_message_; }
+    bool isSource() const { return num_inputs_ == 0; }
     bool isTerminal() const { return num_outputs_ == 0; }
     bool isInputConnected(int index) const { return inputConnector(index) != 0; }
     bool isOutputConnected(int index) const { return outputConnector(index) != 0; }

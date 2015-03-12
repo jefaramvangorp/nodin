@@ -133,15 +133,7 @@ void NodeItem::setShowIONames(bool show)
 void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setRenderHint(QPainter::Antialiasing, true);
-
-    if (node_.isTerminal())
-    {
-        painter->setPen(QPen(QColor(Qt::blue)));
-    }
-    else
-    {
-        painter->setPen(QPen(QColor(Qt::black)));
-    }
+    painter->setPen(QPen(nodeColor()));
 
     drawNodeBox(painter);
     drawText(painter);
@@ -160,6 +152,22 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 //    painter->drawRect(nodeBoxRect());
 //    painter->setPen(QPen(QColor(Qt::blue)));
 //    painter->drawRect(boundingRect());
+}
+
+QColor NodeItem::nodeColor() const
+{
+    if (node_.isTerminal())
+    {
+       return QColor(Qt::blue);
+    }
+    else if (node_.isSource())
+    {
+        return QColor(Qt::green);
+    }
+    else
+    {
+       return QColor(Qt::black);
+    }
 }
 
 void NodeItem::drawNodeBox(QPainter *painter) const
