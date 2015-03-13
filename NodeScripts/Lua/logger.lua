@@ -13,7 +13,6 @@ output_types = {}
 -- Evaluates the value for the output with given index. This function performs the actual logic of the node.
 function evaluateForOutput(outputIndex)
     ndnLogMessage(ndn_inputs.string(0))
-    return ""
 end
 
 
