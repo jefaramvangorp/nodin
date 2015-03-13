@@ -13,7 +13,14 @@ LuaNode::LuaNode(const std::string &id, const LuaNodeScript* script)
 
 bool LuaNode::computeValueAtOutput(const std::vector<std::string> &inputs, int outputIndex, std::string *output)
 {
-    (*output) = script_->evaluateAtOutput(inputs, outputIndex);
+    if (isTerminal())
+    {
+        script_->evaluateAtOutput(inputs, 0);
+    }
+    else
+    {
+        (*output) = script_->evaluateAtOutput(inputs, outputIndex);
+    }
     return true;
 }
 
