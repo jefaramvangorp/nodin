@@ -25,7 +25,6 @@ SOURCES += main.cpp\
     UI/ConnectionItem.cpp \
     App/Nodes/Node.cpp \
     App/Nodes/ConstantNode.cpp \
-    App/Nodes/PrinterNode.cpp \
     App/Boundary/NodeProxy.cpp \
     App/Factories/NodeFactory.cpp \
     UI/NetworkSceneView.cpp \
@@ -33,7 +32,6 @@ SOURCES += main.cpp\
     App/Nodes/TextFileNode.cpp \
     App/Factories/TextFileNFDelegate.cpp \
     App/Factories/ConstantNFDelegate.cpp \
-    App/Factories/PrinterNFDelegate.cpp \
     App/BuiltInConnectorTypes.cpp \
     App/Lua/LuaNodeScript.cpp \
     UI/ParametersDialog.cpp \
@@ -50,7 +48,6 @@ HEADERS  += \
     UI/ConnectionItem.h \
     App/Nodes/Node.h \
     App/Nodes/ConstantNode.h \
-    App/Nodes/PrinterNode.h \
     App/Boundary/NodeProxy.h \
     App/Boundary/ConnectionProxy.h \
     App/Factories/NodeFactory.h \
@@ -60,7 +57,6 @@ HEADERS  += \
     App/Nodes/TextFileNode.h \
     App/Factories/TextFileNFDelegate.h \
     App/Factories/ConstantNFDelegate.h \
-    App/Factories/PrinterNFDelegate.h \
     App/BuiltInConnectorTypes.h \
     App/Lua/LuaNodeScript.h \
     UI/ParametersDialog.h \
