@@ -10,7 +10,7 @@
 class ConstantNode : public Node
 {
 public:
-    ConstantNode(const std::string &id, const std::string& value);
+    ConstantNode(const std::string &id, const std::string &name, const std::string& value, const std::string& type);
 
 private:
 
@@ -18,6 +18,7 @@ private:
     virtual std::string getOutputType(int index) const;
 
     std::string value_;
+    std::string type_;
 };
 
 #endif // APP_NODES_CONSTANTNODE_H_

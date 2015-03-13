@@ -29,7 +29,7 @@ public:
         // Required.
         virtual std::string promptString(const std::string& message) = 0;
         virtual bool promptBool(const std::string& message) = 0;
-        virtual std::map<std::string, std::string> promptParameters(const std::vector<std::string>& parameters) = 0;
+        virtual bool promptConstant(std::string* name, std::string* value, std::string* outputType) = 0;
         virtual void displayError(const std::string& message) = 0;
 
         // Optional.
@@ -56,7 +56,7 @@ public:
     void setDelegate(Delegate* delegate) { delegate_ = delegate; }
 
     bool addNodeFactory(NodeFactoryDelegate* delegate); // Takes ownership of delegate!
-    std::vector<std::string> availableNodeTypes() const { return available_node_types_; }
+    std::vector<std::string> availableNodeTypes() const;
     bool createNode(const std::string& type);
     bool connectNodes(const std::string& outputNodeID, int outputIndex,
                                    const std::string& inputNodeID, int inputIndex);
@@ -75,8 +75,7 @@ private:
     Delegate* delegate_;
     FileSystem* file_system_;
     std::map<std::string, LuaNodeScript*> scripts_;
-    std::vector<NodeFactory*> node_factories_;
-    std::vector<std::string> available_node_types_;
+    std::map<std::string, NodeFactory*> node_factories_;
     std::map<std::string, Node*> nodes_;
     std::vector<Node*> terminal_nodes_;
 };

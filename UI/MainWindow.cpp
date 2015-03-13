@@ -125,20 +125,17 @@ bool MainWindow::promptBool(const std::string &message)
     return button == QMessageBox::Yes;
 }
 
-std::map<std::string, std::string> MainWindow::promptParameters(const std::vector<std::string> &parameters)
+bool MainWindow::promptConstant(std::string* name, std::string* value, std::string* outputType)
 {
-    ParametersDialog dialog(parameters, this);
-    dialog.setWindowTitle(tr("Enter parameters:"));
+    ParametersDialog dialog(this);
+    dialog.setWindowTitle(tr("Enter value and type:"));
 
     int result = dialog.exec();
-    if (result == QDialog::Accepted)
-    {
-        return dialog.parameterValues();
-    }
-    else
-    {
-        return std::map<std::string, std::string>();
-    }
+
+    (*name) = dialog.chosenName();
+    (*value) = dialog.chosenValue();
+    (*outputType) = dialog.chosenOutputType();
+    return result == QDialog::Accepted;
 }
 
 void MainWindow::displayError(const std::string &message)

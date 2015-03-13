@@ -46,5 +46,5 @@ bool ConstantNFDelegate::isValidParameter(const std::string &parameter, const st
 
 Node *ConstantNFDelegate::createNode(const std::string &id, const std::map<std::string, std::string> &parameters)
 {
-    return new ConstantNode(id, parameters.at("value"));
+    return nullptr; //new ConstantNode(id, parameters.at("value"));
 }

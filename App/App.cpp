@@ -4,6 +4,7 @@
 #include "App/Logger.h"
 #include "App/FileSystem.h"
 #include "App/Nodes/Node.h"
+#include "App/Nodes/ConstantNode.h"
 #include "App/Boundary/NodeProxy.h"
 #include "App/Factories/NodeFactory.h"
 #include "App/Factories/LuaNFDelegate.h"
@@ -11,6 +12,11 @@
 #include "App/Boundary/ConnectionProxy.h"
 #include "App/Factories/NodeFactoryDelegate.h"
 #include "App/Lua/LuaNodeScript.h"
+
+namespace
+{
+    const std::string CONSTANT_TYPE = "Constant";
+}
 
 class ScriptFileMonitor : public FileMonitor
 {
@@ -42,10 +48,10 @@ App::~App()
 {
     removeAllNodes();
 
-    std::vector<NodeFactory*>::iterator factories_iter;
+    std::map<std::string, NodeFactory*>::iterator factories_iter;
     for (factories_iter = node_factories_.begin(); factories_iter != node_factories_.end(); ++factories_iter)
     {
-        delete (*factories_iter);
+        delete (*factories_iter).second;
     }
     node_factories_.clear();
 
@@ -61,8 +67,7 @@ bool App::addNodeFactory(NodeFactoryDelegate *delegate)
 {
     if (delegate != nullptr)
     {
-        node_factories_.push_back(new NodeFactory(delegate));
-        available_node_types_.push_back(delegate->nodeType());
+        node_factories_[delegate->nodeType()] = new NodeFactory(delegate);
 
         if (delegate_ != nullptr)
         {
@@ -78,34 +83,38 @@ bool App::addNodeFactory(NodeFactoryDelegate *delegate)
     }
 }
 
+std::vector<std::string> App::availableNodeTypes() const
+{
+    std::vector<std::string> result;
+    result.push_back(CONSTANT_TYPE);
+
+    std::map<std::string, NodeFactory*>::const_iterator iter;
+    for (iter = node_factories_.begin(); iter != node_factories_.end(); ++iter)
+    {
+        result.push_back((*iter).first);
+    }
+
+    return result;
+}
+
 bool App::createNode(const std::string &type)
 {
     std::string id = file_system_->generateUUID();
 
     Node* node = nullptr;
 
-    std::vector<NodeFactory*>::iterator iter;
-    for (iter = node_factories_.begin(); iter != node_factories_.end(); ++iter)
+    if (type == CONSTANT_TYPE) // Special case: these nodes cannot be created by the user.
     {
-        NodeFactory* factory = (*iter);
+        std::string name, value, output_type;
 
-        if (factory->nodeType() == type)
+        if (ui_->promptConstant(&name, &value, &output_type))
         {
-            const std::vector<std::string>& required_params = factory->requiredParameters();
-
-            if (!required_params.empty())
-            {
-                std::map<std::string, std::string> param_values = ui_->promptParameters(required_params);
-
-                for (size_t i = 0; i < required_params.size(); ++i)
-                {
-                    std::string param = required_params[i];
-                    factory->setParameterValue(param, param_values[param]);
-                }
-            }
-
-            node = factory->createNode(id);
+            node = new ConstantNode(id, name, value, output_type);
         }
+    }
+    else
+    {
+        node = node_factories_[type]->createNode(id);
     }
 
     if (node == nullptr)
