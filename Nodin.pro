@@ -67,3 +67,4 @@ OTHER_FILES += ./NodeScripts/Lua/add.lua
 OTHER_FILES += ./NodeScripts/Lua/subtract.lua
 OTHER_FILES += ./NodeScripts/Lua/logger.lua
 OTHER_FILES += ./NodeScripts/Lua/read_text_file.lua
+OTHER_FILES += ./NodeScripts/Lua/write_text_file.lua
