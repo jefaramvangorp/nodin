@@ -15,12 +15,4 @@ function evaluateForOutput(outputIndex)
     return ndn_inputs.float(0) + ndn_inputs.float(1)
 end
 
--- A list of the required parameters to create a node of this type.
-required_parameters = {}
-
--- Validates the parameters with given name and value.
-function validateParameter(name, value)
-    return true
-end
-
 

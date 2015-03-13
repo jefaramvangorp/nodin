@@ -145,8 +145,6 @@ bool LuaNodeScript::isValid(const std::string& fileName)
     required_vars.push_back("input_types");
     required_vars.push_back("output_types");
     required_vars.push_back("evaluateForOutput");
-    required_vars.push_back("required_parameters");
-    required_vars.push_back("validateParameter");
 
     for (size_t i = 0; i < required_vars.size(); ++i)
     {
