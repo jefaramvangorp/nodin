@@ -29,8 +29,6 @@ SOURCES += main.cpp\
     App/Factories/NodeFactory.cpp \
     UI/NetworkSceneView.cpp \
     App/Logger.cpp \
-    App/Nodes/TextFileNode.cpp \
-    App/Factories/TextFileNFDelegate.cpp \
     App/Factories/ConstantNFDelegate.cpp \
     App/BuiltInConnectorTypes.cpp \
     App/Lua/LuaNodeScript.cpp \
@@ -54,8 +52,6 @@ HEADERS  += \
     App/Factories/NodeFactoryDelegate.h \
     UI/NetworkSceneView.h \
     App/Logger.h \
-    App/Nodes/TextFileNode.h \
-    App/Factories/TextFileNFDelegate.h \
     App/Factories/ConstantNFDelegate.h \
     App/BuiltInConnectorTypes.h \
     App/Lua/LuaNodeScript.h \
