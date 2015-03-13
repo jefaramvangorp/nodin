@@ -5,6 +5,7 @@
 // Qt.
 #include <QUuid>
 #include <QDir>
+#include <QFileInfo>
 #include <QFileSystemWatcher>
 
 QtBasedFileSystem::QtBasedFileSystem()
@@ -25,6 +26,19 @@ QtBasedFileSystem::~QtBasedFileSystem()
 std::string QtBasedFileSystem::generateUUID() const
 {
     return QUuid::createUuid().toString().toStdString();
+}
+
+std::string QtBasedFileSystem::baseName(const std::string &absolutePath) const
+{
+    QFileInfo info(QString::fromStdString(absolutePath));
+    if (info.isDir())
+    {
+        return info.dir().dirName().toStdString(); // E.g. returns "mail" for "/var/spool/mail"
+    }
+    else
+    {
+        return info.fileName().toStdString(); // E.g. returns "archive.tar.gz" for "/tmp/archive.tar.gz"
+    }
 }
 
 std::vector<std::string> QtBasedFileSystem::listFilesInDir(const std::string &path, const std::string &extension)

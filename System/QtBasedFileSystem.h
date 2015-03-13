@@ -21,6 +21,7 @@ public:
     virtual ~QtBasedFileSystem();
 
     virtual std::string generateUUID() const;
+    virtual std::string baseName(const std::string& absolutePath) const;
     virtual std::vector<std::string> listFilesInDir(const std::string& path, const std::string& extension);
     virtual void registerFileMonitor(const std::string& fileName, FileMonitor* monitor);
     virtual void unregisterFileMonitor(const std::string& fileName);
