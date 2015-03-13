@@ -35,7 +35,7 @@ public:
     }
 
     int count() { return (int)inputs_.size(); }
-    const std::string& getString(int i) { return inputs_.at(i); }
+    std::string getString(int i) { return inputs_.at(i); }
     float getFloat(int i) { return std::stof(inputs_.at(i)); }
 
 private:
