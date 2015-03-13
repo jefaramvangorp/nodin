@@ -3,7 +3,6 @@
 #include "UI/mainwindow.h"
 #include "App/App.h"
 
-#include "App/Factories/PrinterNFDelegate.h"
 #include "App/Factories/TextFileNFDelegate.h"
 
 #include "System/QtBasedFileSystem.h"
@@ -25,7 +24,6 @@ int main(int argc, char *argv[])
     QtBasedFileSystem file_system;
 
     App app(&file_system);
-    app.addNodeFactory(new PrinterNFDelegate);
     app.addNodeFactory(new TextFileNFDelegate);
     app.loadScriptNodes("Nodin/NodeScripts/Lua");
 
