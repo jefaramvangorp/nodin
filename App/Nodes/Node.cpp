@@ -173,7 +173,7 @@ bool Node::executeAsTerminal()
 {
     std::vector<std::string> inputs;
     bool ok = retrieveInputs(&inputs);
-    return ok && computeValueAtOutput(inputs, 0, 0);
+    return ok && computeValueAtOutput(inputs, 0, nullptr);
 }
 
 bool Node::retrieveInputs(std::vector<std::string> *inputs)
