@@ -251,6 +251,34 @@ bool App::clearAllNodes()
     return ok;
 }
 
+bool App::removeNode(const std::string &id)
+{
+    Node* node = nodes_[id];
+
+    for (int i = 0; i < node->numInputs(); ++i)
+    {
+        if (node->isInputConnected(i))
+        {
+            Connector* c = node->inputConnector(i);
+            c->node_->disconnectOutput(c->index_);
+            delegate_->connectionRemoved(ConnectionProxy(c->node_->id(), c->index_, id, i));
+        }
+    }
+
+    for (int i = 0; i < node->numOutputs(); ++i)
+    {
+        if (node->isOutputConnected(i))
+        {
+            Connector* c = node->outputConnector(i);
+            c->node_->disconnectInput(c->index_);
+            delegate_->connectionRemoved(ConnectionProxy(id, i, c->node_->id(), c->index_));
+        }
+    }
+
+    nodes_.erase(id);
+    delete node;
+}
+
 void App::loadScriptNode(const std::string &fileName)
 {
     if (LuaNodeScript::isValid(fileName))

@@ -62,6 +62,7 @@ public:
                                    const std::string& inputNodeID, int inputIndex);
     void executeTerminalNodes() const;
     bool clearAllNodes();
+    bool removeNode(const std::string& id);
     void loadScriptNode(const std::string& fileName);
     void loadScriptNodes(const std::string& directory);
     void reloadScriptNode(const std::string& fileName);
