@@ -4,6 +4,7 @@
 
 // Qt.
 #include <QMouseEvent>
+#include <QKeyEvent>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QMimeData>
@@ -42,6 +43,16 @@ void NetworkSceneView::mouseMoveEvent(QMouseEvent *event)
     }
 
     QGraphicsView::mouseMoveEvent(event);
+}
+
+void NetworkSceneView::keyReleaseEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Backspace && delegate_ != nullptr)
+    {
+        delegate_->networkSceneViewBackspacePressed();
+    }
+
+    QGraphicsView::keyReleaseEvent(event);
 }
 
 void NetworkSceneView::dragEnterEvent(QDragEnterEvent *event)

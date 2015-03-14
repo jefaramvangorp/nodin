@@ -244,6 +244,22 @@ void MainWindow::networkSceneViewNodeTypeDroppedAt(const QString &type, const QP
     app_->createNode(type_str);
 }
 
+void MainWindow::networkSceneViewBackspacePressed()
+{
+    bool ok = promptBool("Are you sure you want to remove the selected nodes?");
+
+    if (ok)
+    {
+        foreach(QGraphicsItem* item, scene_->selectedItems())
+        {
+            if (NodeItem* node = dynamic_cast<NodeItem*>(item))
+            {
+                app_->removeNode(node->nodeID());
+            }
+        }
+    }
+}
+
 void MainWindow::nodeMoved(NodeItem *item)
 {
     scene_->update(scene_view_->sceneRect());

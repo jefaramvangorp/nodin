@@ -48,6 +48,7 @@ public:
     virtual void networkSceneViewReleasedAt(const QPoint& pos);
     virtual void networkSceneViewMoved(const QPoint& pos);
     virtual void networkSceneViewNodeTypeDroppedAt(const QString& type, const QPoint& pos);
+    virtual void networkSceneViewBackspacePressed();
 
     // NodeItem::Delegate interface.
     virtual void nodeMoved(NodeItem* item);
