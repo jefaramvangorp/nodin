@@ -42,6 +42,7 @@ public:
     // App::Delegate interface.
     virtual void nodeTypeAdded(const std::string& type);
     virtual void connectionRemoved(ConnectionProxy connection);
+    virtual void nodeRemoved(const std::string& id);
 
     // NetworkSceneView::Delegate inteface.
     virtual void networkSceneViewPressedAt(const QPoint& pos);

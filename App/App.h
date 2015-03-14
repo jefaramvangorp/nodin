@@ -43,6 +43,7 @@ public:
         virtual ~Delegate() {}
         virtual void nodeTypeAdded(const std::string& type) = 0;
         virtual void connectionRemoved(ConnectionProxy connection) = 0;
+        virtual void nodeRemoved(const std::string& id) = 0;
     };
 
 

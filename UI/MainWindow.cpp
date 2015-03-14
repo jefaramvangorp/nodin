@@ -180,6 +180,14 @@ void MainWindow::connectionRemoved(ConnectionProxy connection)
     delete item;
 }
 
+void MainWindow::nodeRemoved(const std::string &id)
+{
+    NodeItem* node_item = node_items_[id];
+    scene_->removeItem(node_item);
+    node_items_.remove(id);
+    delete node_item;
+}
+
 void MainWindow::logMessage(const std::string &message)
 {
     log_view_->setTextColor(QColor(Qt::black));

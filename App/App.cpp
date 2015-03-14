@@ -276,6 +276,7 @@ bool App::removeNode(const std::string &id)
     }
 
     nodes_.erase(id);
+    delegate_->nodeRemoved(id);
     delete node;
 }
 
