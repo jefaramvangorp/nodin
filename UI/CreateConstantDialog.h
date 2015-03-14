@@ -1,5 +1,5 @@
-#ifndef UI_PARAMETERSDIALOG_H_
-#define UI_PARAMETERSDIALOG_H_
+#ifndef UI_CREATECONSTANTDIALOG_H_
+#define UI_CREATECONSTANTDIALOG_H_
 
 // Qt.
 #include <QDialog>
@@ -14,13 +14,13 @@
 class QLineEdit;
 class QPushButton;
 
-class ParametersDialog : public QDialog
+class CreateConstantDialog : public QDialog
 {
     Q_OBJECT
 
 public:
 
-    ParametersDialog(QWidget* parent = 0);
+    CreateConstantDialog(QWidget* parent = 0);
 
     const std::string& chosenName() const { return name_; }
     const std::string& chosenValue() const { return value_; }
@@ -44,4 +44,4 @@ private:
     QPushButton* browse_button_;
 };
 
-#endif // UI_PARAMETERSDIALOG_H_
+#endif // UI_CREATECONSTANTDIALOG_H_

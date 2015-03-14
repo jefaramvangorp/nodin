@@ -3,7 +3,7 @@
 #include "UI/MainWindow.h"
 #include "UI/NodeItem.h"
 #include "UI/ConnectionItem.h"
-#include "UI/ParametersDialog.h"
+#include "UI/CreateConstantDialog.h"
 #include "UI/TypesWidget.h"
 #include "UI/ScriptEditorWindow.h"
 #include "App/App.h"
@@ -127,7 +127,7 @@ bool MainWindow::promptBool(const std::string &message)
 
 bool MainWindow::promptConstant(std::string* name, std::string* value, std::string* outputType)
 {
-    ParametersDialog dialog(this);
+    CreateConstantDialog dialog(this);
     dialog.setWindowTitle(tr("Enter value and type:"));
 
     int result = dialog.exec();

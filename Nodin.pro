@@ -32,12 +32,12 @@ SOURCES += main.cpp\
     App/Factories/ConstantNFDelegate.cpp \
     App/BuiltInConnectorTypes.cpp \
     App/Lua/LuaNodeScript.cpp \
-    UI/ParametersDialog.cpp \
     UI/TypesWidget.cpp \
     App/Nodes/LuaNode.cpp \
     App/Factories/LuaNFDelegate.cpp \
     System/QtBasedFileSystem.cpp \
-    UI/ScriptEditorWindow.cpp
+    UI/ScriptEditorWindow.cpp \
+    UI/CreateConstantDialog.cpp
 
 HEADERS  += \
     UI/NodeItem.h \
@@ -55,13 +55,13 @@ HEADERS  += \
     App/Factories/ConstantNFDelegate.h \
     App/BuiltInConnectorTypes.h \
     App/Lua/LuaNodeScript.h \
-    UI/ParametersDialog.h \
     UI/TypesWidget.h \
     App/Nodes/LuaNode.h \
     App/Factories/LuaNFDelegate.h \
     App/FileSystem.h \
     System/QtBasedFileSystem.h \
-    UI/ScriptEditorWindow.h
+    UI/ScriptEditorWindow.h \
+    UI/CreateConstantDialog.h
 
 OTHER_FILES += ./NodeScripts/Lua/add.lua
 OTHER_FILES += ./NodeScripts/Lua/subtract.lua

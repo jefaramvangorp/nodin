@@ -1,6 +1,6 @@
 
 // Includes.
-#include "UI/ParametersDialog.h"
+#include "UI/CreateConstantDialog.h"
 
 // Qt.
 #include <QLabel>
@@ -14,7 +14,7 @@
 #include <QFileDialog>
 #include <QFileInfo>
 
-ParametersDialog::ParametersDialog(QWidget *parent)
+CreateConstantDialog::CreateConstantDialog(QWidget *parent)
     : QDialog(parent)
     , value_edit_(nullptr)
     , browse_button_(nullptr)
@@ -25,15 +25,15 @@ ParametersDialog::ParametersDialog(QWidget *parent)
 
     name_edit_ = new QLineEdit;
     name_edit_->setMinimumWidth(200);
-    connect(name_edit_, &QLineEdit::textChanged, this, &ParametersDialog::nameChanged);
+    connect(name_edit_, &QLineEdit::textChanged, this, &CreateConstantDialog::nameChanged);
 
     value_edit_ = new QLineEdit;
     value_edit_->setMinimumWidth(200);
-    connect(value_edit_, &QLineEdit::textChanged, this, &ParametersDialog::valueChanged);
+    connect(value_edit_, &QLineEdit::textChanged, this, &CreateConstantDialog::valueChanged);
     browse_button_ = new QPushButton(tr("Browse..."));
     browse_button_->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     browse_button_->setVisible(false);
-    connect(browse_button_, &QPushButton::clicked, this, &ParametersDialog::browseClicked);
+    connect(browse_button_, &QPushButton::clicked, this, &CreateConstantDialog::browseClicked);
 
     QHBoxLayout* value_layout = new QHBoxLayout;
     value_layout->addWidget(value_edit_);
@@ -65,7 +65,7 @@ ParametersDialog::ParametersDialog(QWidget *parent)
     setLayout(layout);
 }
 
-void ParametersDialog::typeSelected(const QString &type)
+void CreateConstantDialog::typeSelected(const QString &type)
 {
     // TODO: replace hard-coded strings with constant!
 
@@ -81,17 +81,17 @@ void ParametersDialog::typeSelected(const QString &type)
     }
 }
 
-void ParametersDialog::valueChanged(const QString &value)
+void CreateConstantDialog::valueChanged(const QString &value)
 {
     value_ = value.toStdString();
 }
 
-void ParametersDialog::nameChanged(const QString &name)
+void CreateConstantDialog::nameChanged(const QString &name)
 {
     name_ = name.toStdString();
 }
 
-void ParametersDialog::browseClicked()
+void CreateConstantDialog::browseClicked()
 {
     QString file_name = QFileDialog::getOpenFileName(this, tr("Open file..."));
     if (!file_name.isEmpty())
