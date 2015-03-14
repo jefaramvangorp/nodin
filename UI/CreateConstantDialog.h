@@ -24,22 +24,22 @@ public:
 
     const std::string& chosenName() const { return name_; }
     const std::string& chosenValue() const { return value_; }
-    const std::string& chosenOutputType() const { return output_type_; }
+    const std::string& chosenOutputType() const;
 
 private slots:
 
     void typeSelected(const QString& type);
     void valueChanged(const QString& value);
-    void nameChanged(const QString& name);
     void browseClicked();
 
 private:
+
+    void setName();
 
     std::string name_;
     std::string value_;
     std::string output_type_;
 
-    QLineEdit* name_edit_;
     QLineEdit* value_edit_;
     QPushButton* browse_button_;
 };

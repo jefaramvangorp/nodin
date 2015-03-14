@@ -23,10 +23,6 @@ CreateConstantDialog::CreateConstantDialog(QWidget *parent)
     type_box->addItems(QStringList() << "float" << "string" << "file_name"); // TODO: query supported types from app.
     connect(type_box, SIGNAL(currentTextChanged(QString)), this, SLOT(typeSelected(QString)));
 
-    name_edit_ = new QLineEdit;
-    name_edit_->setMinimumWidth(200);
-    connect(name_edit_, &QLineEdit::textChanged, this, &CreateConstantDialog::nameChanged);
-
     value_edit_ = new QLineEdit;
     value_edit_->setMinimumWidth(200);
     connect(value_edit_, &QLineEdit::textChanged, this, &CreateConstantDialog::valueChanged);
@@ -42,7 +38,6 @@ CreateConstantDialog::CreateConstantDialog(QWidget *parent)
     QFormLayout* form_layout = new QFormLayout;
     form_layout->addRow(tr("Type:"), type_box);
     form_layout->addRow(tr("Value:"), value_layout);
-    form_layout->addRow(tr("Name:"), name_edit_);
 
 
     QPushButton* ok_button = new QPushButton(tr("Ok"));
@@ -65,18 +60,29 @@ CreateConstantDialog::CreateConstantDialog(QWidget *parent)
     setLayout(layout);
 }
 
+const std::string& CreateConstantDialog::chosenOutputType() const
+{
+    if (output_type_ == "file_name")
+    {
+        return "string";
+    }
+    else
+    {
+        return output_type_;
+    }
+}
+
 void CreateConstantDialog::typeSelected(const QString &type)
 {
     // TODO: replace hard-coded strings with constant!
 
-    if (type == "file_name")
+    output_type_ = type.toStdString();
+    if (output_type_ == "file_name")
     {
-        output_type_ = "string";
         browse_button_->setVisible(true);
     }
     else
     {
-        output_type_ = type.toStdString();
         browse_button_->setVisible(false);
     }
 }
@@ -84,11 +90,27 @@ void CreateConstantDialog::typeSelected(const QString &type)
 void CreateConstantDialog::valueChanged(const QString &value)
 {
     value_ = value.toStdString();
+    setName();
 }
 
-void CreateConstantDialog::nameChanged(const QString &name)
+void CreateConstantDialog::setName()
 {
-    name_ = name.toStdString();
+    if (output_type_ == "file_name")
+    {
+        QFileInfo info(QString::fromStdString(value_));
+        if (info.isDir())
+        {
+            name_ = info.dir().dirName().toStdString();
+        }
+        else
+        {
+            name_ = info.fileName().toStdString();
+        }
+    }
+    else
+    {
+        name_ = value_;
+    }
 }
 
 void CreateConstantDialog::browseClicked()
@@ -97,15 +119,6 @@ void CreateConstantDialog::browseClicked()
     if (!file_name.isEmpty())
     {
         value_edit_->setText(file_name);
-
-        QFileInfo info(file_name);
-        if (info.isDir())
-        {
-            name_edit_->setText(info.dir().dirName());
-        }
-        else
-        {
-            name_edit_->setText(info.fileName());
-        }
+        setName();
     }
 }
