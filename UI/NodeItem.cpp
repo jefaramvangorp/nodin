@@ -133,7 +133,11 @@ void NodeItem::setShowIONames(bool show)
 void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setRenderHint(QPainter::Antialiasing, true);
-    painter->setPen(QPen(nodeColor()));
+
+    QPen pen;
+    pen.setColor(nodeColor());
+    pen.setWidth(isSelected() ? 2 : 1);
+    painter->setPen(pen);
 
     drawNodeBox(painter);
     drawText(painter);
