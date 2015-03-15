@@ -79,5 +79,10 @@ void QtBasedFileSystem::unregisterFileMonitor(const std::string &fileName)
 
 void QtBasedFileSystem::fileChanged(const QString &fileName)
 {
-    file_monitors_[fileName]->fileWasModified();
+    if (file_monitors_.contains(fileName))
+    {
+        file_monitors_[fileName]->fileWasModified();
+    }
+
+    watcher_->addPath(fileName);
 }
