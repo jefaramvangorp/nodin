@@ -23,6 +23,11 @@ CreateConstantDialog::CreateConstantDialog(QWidget *parent)
     type_box->addItems(QStringList() << "float" << "string" << "file_name"); // TODO: query supported types from app.
     connect(type_box, SIGNAL(currentTextChanged(QString)), this, SLOT(typeSelected(QString)));
 
+    // Note: we have to initialize output type here with selected item,
+    //       because otherwise the output type is an empty string when
+    //       the user does not change the selection of the combo box.
+    output_type_ = type_box->currentText().toStdString();
+
     value_edit_ = new QLineEdit;
     value_edit_->setMinimumWidth(200);
     connect(value_edit_, &QLineEdit::textChanged, this, &CreateConstantDialog::valueChanged);
