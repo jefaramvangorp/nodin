@@ -13,6 +13,7 @@ NetworkSceneView::NetworkSceneView(QGraphicsScene *scene, QWidget *parent)
     : QGraphicsView(scene, parent)
     , delegate_(nullptr)
 {
+    setDragMode(QGraphicsView::RubberBandDrag);
 }
 
 void NetworkSceneView::mousePressEvent(QMouseEvent *event)
